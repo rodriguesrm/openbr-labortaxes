@@ -6,40 +6,40 @@ namespace OpenBr.Inss.Business.Documents
 {
 
     /// <summary>
-    /// Contém as informações da tabela de inss
+    /// Contains the INSS table information
     /// </summary>
     public class Inss : DocumentBase
     {
 
         /// <summary>
-        /// Tipo de tabela de contribuição
+        /// Contribution table type
         /// </summary>
-        public TipoTabelaInss Tipo { get; set; }
+        public InssType Type { get; set; }
 
         /// <summary>
-        /// Data de início da vigência da tabela
+        /// Table Effective Date Start
         /// </summary>
-        public DateTime VigenciaInicio { get; set; }
+        public DateTime DateStart { get; set; }
 
         /// <summary>
-        /// Data do término da vigência da tabela
+        /// Table Effective Date End
         /// </summary>
-        public DateTime? VigenciaTermino { get; set; }
+        public DateTime? DateEnd { get; set; }
 
         /// <summary>
-        /// Valor limite (teto) de contribuição da tabela
+        /// Limit value of table contribution
         /// </summary>
-        public decimal Limite { get; set; }
+        public decimal Limit { get; set; }
 
         /// <summary>
-        /// Indica se a tabela está ativa ou inativa
+        /// Indicates whether the table is active or inactive
         /// </summary>
-        public bool Inativo { get; set; }
+        public bool Inactive { get; set; }
 
         /// <summary>
-        /// Faixa dos valores para contribuição
+        /// Contribution Range of values
         /// </summary>
-        public IEnumerable<InssFaixa> Faixa { get; set; }
+        public IEnumerable<InssRange> Range { get; set; }
 
     }
 }

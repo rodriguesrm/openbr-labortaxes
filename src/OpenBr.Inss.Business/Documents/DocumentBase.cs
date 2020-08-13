@@ -6,7 +6,7 @@ namespace OpenBr.Inss.Business.Documents
 {
 
     /// <summary>
-    /// Modelo abstrato de entidade de documento
+    /// Abstract document entity template
     /// </summary>
     public abstract class DocumentBase : IEntity
     {

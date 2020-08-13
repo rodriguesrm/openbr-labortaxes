@@ -9,7 +9,7 @@ namespace OpenBr.Inss.Business.Enums
     /// </summary>
 
     [Flags]
-    public enum TipoTabelaInss
+    public enum InssType
     {
 
         [Description("Tabela para Empregado, Empregado Doméstico e Trabalhador Avulso")]

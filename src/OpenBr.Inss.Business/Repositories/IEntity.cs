@@ -2,13 +2,13 @@
 {
 
     /// <summary>
-    /// Interface de entidade
+    /// Entity interface
     /// </summary>
     public interface IEntity
     {
 
         /// <summary>
-        /// Id da entidade
+        /// Entity Id
         /// </summary>
         public string Id { get; }
 
