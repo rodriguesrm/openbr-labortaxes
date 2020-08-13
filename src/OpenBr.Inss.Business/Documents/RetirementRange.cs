@@ -4,7 +4,7 @@
     /// <summary>
     /// Contém detalhes da faixa de contribuição
     /// </summary>
-    public class InssRange
+    public class RetirementRange
     {
 
         /// <summary>

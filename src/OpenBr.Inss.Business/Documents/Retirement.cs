@@ -8,7 +8,7 @@ namespace OpenBr.Inss.Business.Documents
     /// <summary>
     /// Contains the INSS table information
     /// </summary>
-    public class Inss : DocumentBase
+    public class Retirement : DocumentBase
     {
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace OpenBr.Inss.Business.Documents
         /// <summary>
         /// Contribution Range of values
         /// </summary>
-        public IEnumerable<InssRange> Range { get; set; }
+        public IEnumerable<RetirementRange> Range { get; set; }
 
     }
 }
