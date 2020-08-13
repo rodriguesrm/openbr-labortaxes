@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Infra\Config\" />
+    <Folder Include="Infra\IoC\" />
+    <Folder Include="Infra\MongoDb\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDb.Driver" Version="2.11.0" />
+  </ItemGroup>
+
+</Project>
