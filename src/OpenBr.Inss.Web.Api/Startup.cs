@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OpenBr.Inss.Business.Infra.IoC;
-using OpenBr.Inss.Business.Infra.MongoDb;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace OpenBr.Inss.Web.Api
 {
@@ -70,6 +70,10 @@ namespace OpenBr.Inss.Web.Api
             services.AddApplicationService(Configuration);
 
             services.AddControllers();
+
+            services
+                .AddControllersWithViews()
+                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         }
 

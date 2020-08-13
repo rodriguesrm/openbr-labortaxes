@@ -19,9 +19,5 @@
     <ProjectReference Include="..\OpenBr.Inss.Business\OpenBr.Inss.Business.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 
 </Project>

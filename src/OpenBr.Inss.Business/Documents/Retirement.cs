@@ -14,7 +14,7 @@ namespace OpenBr.Inss.Business.Documents
         /// <summary>
         /// Contribution table type
         /// </summary>
-        public InssType Type { get; set; }
+        public RetirementType Type { get; set; }
 
         /// <summary>
         /// Table Effective Date Start

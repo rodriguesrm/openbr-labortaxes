@@ -8,12 +8,12 @@
     {
 
         /// <summary>
-        /// Range start value (income)
+        /// Range start value (revenue)
         /// </summary>
         public decimal StartValue { get; set; }
 
         /// <summary>
-        /// Range end value (income)
+        /// Range end value (revenue)
         /// </summary>
         public decimal EndValure { get; set; }
 
