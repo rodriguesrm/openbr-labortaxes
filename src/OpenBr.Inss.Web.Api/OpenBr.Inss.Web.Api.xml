@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OpenBr.Inss.Web.Api</name>
+    </assembly>
+    <members>
+        <member name="T:OpenBr.Inss.Web.Api.Program">
+            <summary>
+            Kick-off application object
+            </summary>
+        </member>
+        <member name="M:OpenBr.Inss.Web.Api.Program.Main(System.String[])">
+            <summary>
+            Main method kick-off
+            </summary>
+            <param name="args">Arguments list</param>
+        </member>
+        <member name="M:OpenBr.Inss.Web.Api.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Host environment builder
+            </summary>
+            <param name="args">Arguments list</param>
+        </member>
+        <member name="T:OpenBr.Inss.Web.Api.Startup">
+            <summary>
+            Application startup object
+            </summary>
+        </member>
+        <member name="M:OpenBr.Inss.Web.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Creates a new instance of the application
+            </summary>
+            <param name="configuration">Configuration object</param>
+        </member>
+        <member name="P:OpenBr.Inss.Web.Api.Startup.Configuration">
+            <summary>
+            Injected settings property
+            </summary>
+        </member>
+        <member name="M:OpenBr.Inss.Web.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services">Service collection</param>
+        </member>
+        <member name="M:OpenBr.Inss.Web.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,System.IServiceProvider)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app">Application builder object</param>
+            <param name="env">Web host environment data</param>
+            <param name="serviceProvider">Service provider collection</param>
+        </member>
+    </members>
+</doc>
