@@ -42,10 +42,12 @@ namespace OpenBr.Inss.Business.Repositories
         #region Public methods
 
         ///<inheritdoc/>
-        public async Task CreateCollectionAsync()
+        public async Task CreateDocumentCollectionAsync()
         {
-            await CreateCollectionAsync();
+            await CreateCollectionAsync(false, null, null);
             await CreateIndexAsync(c => c.Type, nameof(Retirement.Type).ToCamelCase());
+            await CreateIndexAsync(c => c.DateStart, nameof(Retirement.DateStart).ToCamelCase());
+            await CreateIndexAsync(c => c.DateEnd, nameof(Retirement.DateEnd).ToCamelCase());
         }
 
         /// <summary>

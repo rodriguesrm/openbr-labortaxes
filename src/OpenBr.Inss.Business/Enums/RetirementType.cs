@@ -7,7 +7,6 @@ namespace OpenBr.Inss.Business.Enums
     /// <summary>
     /// Contribution table type enumeration
     /// </summary>
-
     [Flags]
     public enum RetirementType
     {

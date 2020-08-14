@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OpenBr.Inss.Business.Infra.IoC;
+using OpenBr.Inss.Business.Infra.MongoDb;
+using OpenBr.Inss.Web.Api.Extensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -40,40 +42,15 @@ namespace OpenBr.Inss.Web.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            #region Swagger
-
-            services.AddSwaggerGen(c =>
-            {
-
-                c.SwaggerDoc("v1",
-                    new OpenApiInfo
-                    {
-                        Title = "OpenBrasil INSS",
-                        Version = "v1",
-                        Description = "INSS Calculator API",
-                        Contact = new OpenApiContact
-                        {
-                            Name = "Rodrigo Rodrigues",
-                            Url = new Uri("https://github.com/rodriguesrm")
-                        }
-                    });
-
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-
-            });
-
-            #endregion
-
-            // Add application service
-            services.AddApplicationService(Configuration);
-
             services.AddControllers();
-
+            
             services
                 .AddControllersWithViews()
                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddApplicationSwagger();
+
+            services.AddApplicationService(Configuration);
 
         }
 
@@ -93,16 +70,7 @@ namespace OpenBr.Inss.Web.Api
             app.UseRouting();
             app.UseAuthorization();
 
-            #region Swagger
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenBrasil Inss v1.0");
-                c.RoutePrefix = string.Empty;
-            });
-
-            #endregion
+            app.UseApplicationSwagger();
 
             app.UseCors(c =>
             {
@@ -120,8 +88,8 @@ namespace OpenBr.Inss.Web.Api
             });
 
             // Create database objects
-            //IDbDocumentCollectionCreator creators = serviceProvider.GetService<IDbDocumentCollectionCreator>();
-            //creators.Create().Wait();
+            IDbDocumentCollectionCreator creators = serviceProvider.GetService<IDbDocumentCollectionCreator>();
+            creators.Create().Wait();
 
         }
     }

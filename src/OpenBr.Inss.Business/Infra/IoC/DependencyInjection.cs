@@ -34,6 +34,10 @@ namespace OpenBr.Inss.Business.Infra.IoC
             services.AddScoped<IDbDocumentCollectionCreator, MongoCollectionCreator>();
             services.RegisterAllTypes<IDocumentCollectionCreator>(ServiceLifetime.Scoped, typeof(MongoCollectionCreator).Assembly);
 
+            // Data seeders
+            services.AddScoped<IDbDataSeeder, MongoDataSeeder>();
+            services.RegisterAllTypes<IDataSeeder>(ServiceLifetime.Scoped, typeof(MongoDataSeeder).Assembly);
+
             // Services & Repositories
             services.AddScoped<IRetirementRepository, RetirementRepository>();
             services.AddScoped<IRetirementService, RetirementService>();

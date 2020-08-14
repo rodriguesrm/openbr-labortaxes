@@ -33,7 +33,7 @@ namespace OpenBr.Inss.Business.Infra.MongoDb
         ///<inheritdoc/>
         public async Task Create()
         {
-            await Task.WhenAll(_criadores.Select(c => c.CreateCollectionAsync()));
+            await Task.WhenAll(_criadores.Select(c => c.CreateDocumentCollectionAsync()));
         }
 
     }

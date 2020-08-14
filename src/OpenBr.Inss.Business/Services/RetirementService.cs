@@ -3,9 +3,7 @@ using OpenBr.Inss.Business.Enums;
 using OpenBr.Inss.Business.Model;
 using OpenBr.Inss.Business.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,20 +37,21 @@ namespace OpenBr.Inss.Business.Services
         ///<inheritdoc/>
         public async Task<CalculateRetirementResult> CalculateRetirement(RetirementType type, decimal revenue, CancellationToken cancellationToken = default)
         {
-            CalculateRetirementResult result = new CalculateRetirementResult();
+            CalculateRetirementResult result = null;
 
             Retirement retirement = await _repository.GetActive(type, cancellationToken);
             if (retirement != null)
             {
 
-                RetirementRange range = retirement.Range.OrderByDescending(o => o.EndValure).FirstOrDefault(x => x.EndValure >= revenue);
+                RetirementRange range = retirement.Range.OrderByDescending(o => o.EndValue).FirstOrDefault(x => x.EndValue >= revenue);
                 
                 decimal value = (revenue * range.Rate / 100);
                 value -= range.DeductedAmount;
                 if (value > retirement.Limit)
                     value = retirement.Limit;
                 value = Math.Round(value, 2);
-                
+
+                result = new CalculateRetirementResult();
                 result.Rate = range.Rate;
                 result.Amount = value;
 

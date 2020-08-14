@@ -15,7 +15,7 @@
         /// <summary>
         /// Range end value (revenue)
         /// </summary>
-        public decimal EndValure { get; set; }
+        public decimal EndValue { get; set; }
 
         /// <summary>
         /// Contribution rate (percentage to be applied)

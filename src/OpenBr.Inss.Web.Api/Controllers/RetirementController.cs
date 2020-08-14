@@ -25,7 +25,7 @@ namespace OpenBr.Inss.Web.Api.Controllers
         /// <response code="200">Operation sucess, return response data</response>
         /// <response code="400">Bad request, see details</response>
         [HttpPost]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetirementCalculateRequest), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CalculateRetirement
         (
@@ -35,6 +35,8 @@ namespace OpenBr.Inss.Web.Api.Controllers
         )
         {
             var resp = await service.CalculateRetirement(request.Type, request.TotalRevenue, cancellationToken);
+            if (resp == null)
+                return NotFound(resp);
             return Ok(resp);
         }
 

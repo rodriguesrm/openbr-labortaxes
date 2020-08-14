@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
-using OpenBr.Inss.Business.Enums;
+﻿using OpenBr.Inss.Business.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace OpenBr.Inss.Web.Api.Model
 {
@@ -15,11 +13,8 @@ namespace OpenBr.Inss.Web.Api.Model
         /// <summary>
         /// Retirement type
         /// </summary>
-        /// <remarks>
-        /// Remarks</remarks>
+        /// <remarks>REMARKS</remarks>
         [Required]
-        [EnumDataType(typeof(RetirementType))]
-        [JsonConverter(typeof(StringEnumConverter))]
         public RetirementType Type { get; set; }
 
         /// <summary>
@@ -31,3 +26,9 @@ namespace OpenBr.Inss.Web.Api.Model
 
     }
 }
+
+
+
+/// <example>1 //Worker</example>
+/// <example>2 //Individual</example>
+/// <example>3 //AdminPartner</example>

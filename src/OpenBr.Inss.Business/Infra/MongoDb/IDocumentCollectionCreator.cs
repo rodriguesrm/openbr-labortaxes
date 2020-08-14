@@ -10,9 +10,9 @@ namespace OpenBr.Inss.Business.Infra.MongoDb
     {
 
         /// <summary>
-        /// Creates collection
+        /// Create document collection
         /// </summary>
-        Task CreateCollectionAsync();
+        Task CreateDocumentCollectionAsync();
 
     }
 
