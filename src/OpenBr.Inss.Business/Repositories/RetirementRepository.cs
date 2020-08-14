@@ -1,7 +1,9 @@
 ﻿using MongoDB.Driver;
 using OpenBr.Inss.Business.Documents;
+using OpenBr.Inss.Business.Enums;
 using OpenBr.Inss.Business.Helpers;
 using OpenBr.Inss.Business.Infra.MongoDb;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBr.Inss.Business.Repositories
@@ -39,13 +41,23 @@ namespace OpenBr.Inss.Business.Repositories
 
         #region Public methods
 
-       
-
         ///<inheritdoc/>
         public async Task CreateCollectionAsync()
         {
             await CreateCollectionAsync();
             await CreateIndexAsync(c => c.Type, nameof(Retirement.Type).ToCamelCase());
+        }
+
+        /// <summary>
+        /// Get active retirement 
+        /// </summary>
+        /// <param name="type">Retirement type</param>
+        public async Task<Retirement> GetActive(RetirementType type, CancellationToken cancellationToken = default)
+        {
+            FilterDefinitionBuilder<Retirement> builder = Builders<Retirement>.Filter;
+            FilterDefinition<Retirement> filter = builder.Eq(nameof(Retirement.Type).ToCamelCase(), type) & builder.Eq(nameof(Retirement.Inactive).ToCamelCase(), false);
+            Retirement result = await Collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+            return result;
         }
 
         #endregion

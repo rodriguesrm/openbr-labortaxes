@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using OpenBr.Inss.Business.Infra.Config;
 using OpenBr.Inss.Business.Infra.MongoDb;
+using OpenBr.Inss.Business.Repositories;
+using OpenBr.Inss.Business.Services;
 
 namespace OpenBr.Inss.Business.Infra.IoC
 {
@@ -32,8 +34,9 @@ namespace OpenBr.Inss.Business.Infra.IoC
             services.AddScoped<IDbDocumentCollectionCreator, MongoCollectionCreator>();
             services.RegisterAllTypes<IDocumentCollectionCreator>(ServiceLifetime.Scoped, typeof(MongoCollectionCreator).Assembly);
 
-            // Repositories
-            //services.AddScoped<ICepRepository, CepRepository>();
+            // Services & Repositories
+            services.AddScoped<IRetirementRepository, RetirementRepository>();
+            services.AddScoped<IRetirementService, RetirementService>();
 
             return services;
 
