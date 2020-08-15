@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
@@ -53,8 +57,7 @@ namespace OpenBr.Inss.Web.Api.Extensions
         /// <summary>
         /// Enable swagger in application
         /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
+        /// <param name="app">Application builder object instance</param>
         public static IApplicationBuilder UseApplicationSwagger(this IApplicationBuilder app)
         {
 
@@ -64,6 +67,51 @@ namespace OpenBr.Inss.Web.Api.Extensions
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenBrasil Inss v1.0");
                 c.RoutePrefix = string.Empty;
             });
+
+            return app;
+        }
+
+        #endregion
+
+        #region HealthCheck
+
+        /// <summary>
+        /// Adds the HealthCheckService to the container, using the provided delegate to register health checks.
+        /// </summary>
+        /// <param name="services">Service collection</param>
+        /// <param name="configuration">Configuration object instance</param>
+        public static IServiceCollection AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.AddHealthChecks()
+                    .AddMongoDb(
+                                mongodbConnectionString: configuration.GetConnectionString("MongoDb"),
+                                name: "MongoDB",
+                                failureStatus: HealthStatus.Unhealthy,
+                                timeout: TimeSpan.FromSeconds(15),
+                                tags: new string[] { "mongodb" });
+
+            services.AddHealthChecksUI();
+
+            return services;
+
+        }
+
+        /// <summary>
+        /// Adds a middleware that provides health check status.
+        /// </summary>
+        /// <param name="app">Application builder object instance</param>
+        public static IApplicationBuilder UseApplicationHealthChecks(this IApplicationBuilder app)
+        {
+
+            app
+                .UseHealthChecks("/selfcheck", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                })
+                .UseHealthChecksUI();
+
 
             return app;
         }

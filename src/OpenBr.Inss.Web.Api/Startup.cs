@@ -47,8 +47,8 @@ namespace OpenBr.Inss.Web.Api
                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddApplicationSwagger();
-
             services.AddApplicationService(Configuration);
+            services.AddApplicationHealthChecks(Configuration);
 
             services
                 .AddControllers(opt => GlobalFilters.Configure(opt))
@@ -73,6 +73,7 @@ namespace OpenBr.Inss.Web.Api
             app.UseAuthorization();
 
             app.UseApplicationSwagger();
+            app.UseApplicationHealthChecks();
 
             app.UseCors(c =>
             {
