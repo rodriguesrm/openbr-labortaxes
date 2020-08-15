@@ -1,0 +1,24 @@
+﻿[
+  {
+    "type": 1, "DateStart": "2020-03-01", "DateEnd": null, "Limit": 713.10, "Inactive": false,
+    "Range": [
+      { "StartValue":    0.00, "EndValue":   1045.00, "Rate":  7.50, "DeductedAmount":   0.00 },
+      { "StartValue": 1045.01, "EndValue":   2089.60, "Rate":  9.00, "DeductedAmount":  15.67 },
+      { "StartValue": 2089.61, "EndValue":   3134.40, "Rate": 12.00, "DeductedAmount":  78.36 },
+      { "StartValue": 3134.41, "EndValue":   6101.06, "Rate": 14.00, "DeductedAmount": 141.05 }
+    ]
+  },
+  {
+    "type": 2, "DateStart": "2020-01-01", "DateEnd": null, "Limit": 1220.20, "Inactive": false,
+    "Range": [
+      { "StartValue":    0.00, "EndValue":   1045.00, "Rate":  5.00, "DeductedAmount":   0.00 },
+      { "StartValue": 1045.01, "EndValue":   6101.06, "Rate": 20.00, "DeductedAmount":   0.00 }
+    ]
+  },
+  {
+    "type": 3, "DateStart": "2020-03-01", "DateEnd": null, "Limit": 713.10, "Inactive": false,
+    "Range": [
+      { "StartValue":    0.00, "EndValue": 999999.99, "Rate": 11.00, "DeductedAmount":   0.00 }
+    ]
+  }
+]
