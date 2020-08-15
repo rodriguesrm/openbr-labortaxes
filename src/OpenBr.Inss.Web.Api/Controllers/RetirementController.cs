@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenBr.Inss.Business.Enums;
 using OpenBr.Inss.Business.Model;
 using OpenBr.Inss.Business.Services;
+using OpenBr.Inss.Web.Api.Models;
 
 namespace OpenBr.Inss.Web.Api.Controllers
 {
@@ -31,7 +32,7 @@ namespace OpenBr.Inss.Web.Api.Controllers
         /// <response code="400">Bad request, see details</response>
         [HttpGet("{type:int}/{revenue:decimal}")]
         [ProducesResponseType(typeof(CalculateRetirementResult), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ValidationModelResult), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CalculateRetirement
         (
             [FromServices] IRetirementService service,

@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using OpenBr.Inss.Business.Infra.IoC;
 using OpenBr.Inss.Business.Infra.MongoDb;
 using OpenBr.Inss.Web.Api.Extensions;
+using OpenBr.Inss.Web.Api.Filters;
 using System;
-using System.IO;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace OpenBr.Inss.Web.Api
@@ -51,6 +49,10 @@ namespace OpenBr.Inss.Web.Api
             services.AddApplicationSwagger();
 
             services.AddApplicationService(Configuration);
+
+            services
+                .AddControllers(opt => GlobalFilters.Configure(opt))
+                .ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true);
 
         }
 
