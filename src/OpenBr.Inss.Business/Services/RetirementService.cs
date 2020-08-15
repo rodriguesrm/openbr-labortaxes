@@ -35,29 +35,40 @@ namespace OpenBr.Inss.Business.Services
         #endregion
 
         ///<inheritdoc/>
-        public async Task<CalculateRetirementResult> CalculateRetirement(RetirementType type, decimal revenue, CancellationToken cancellationToken = default)
+        public async Task<CalculateRetirementResult> CalculateRetirement(RetirementType type, decimal revenue, DateTime? date, CancellationToken cancellationToken = default)
         {
+
             CalculateRetirementResult result = null;
 
-            Retirement retirement = await _repository.GetActive(type, cancellationToken);
+            Retirement retirement = await _repository.GetActive(type, date, cancellationToken);
             if (retirement != null)
             {
-
-                RetirementRange range = retirement.Range.OrderByDescending(o => o.EndValue).FirstOrDefault(x => x.EndValue >= revenue);
+                RetirementRange range = retirement
+                    .Range
+                    .OrderByDescending(o => o.EndValue)
+                    .FirstOrDefault(x => (revenue >= x.StartValue && revenue <= x.EndValue) || revenue >= x.EndValue);
                 
-                decimal value = (revenue * range.Rate / 100);
-                value -= range.DeductedAmount;
-                if (value > retirement.Limit)
-                    value = retirement.Limit;
-                value = Math.Round(value, 2);
+                if (range != null)
+                {
 
-                result = new CalculateRetirementResult();
-                result.Rate = range.Rate;
-                result.Amount = value;
+                    result = new CalculateRetirementResult();
+                    decimal value = (revenue * range.Rate / 100);
+                    value -= range.DeductedAmount;
+                    if (value > retirement.Limit)
+                    {
+                        value = retirement.Limit;
+                        result.IsLimit = true;
+                    }
+                    value = Math.Round(value, 2);
+
+                    result.Rate = range.Rate;
+                    result.Amount = value;
+                }
 
             }
 
             return result;
+
         }
     }
 }

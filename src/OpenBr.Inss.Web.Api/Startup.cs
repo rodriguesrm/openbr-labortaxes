@@ -91,6 +91,10 @@ namespace OpenBr.Inss.Web.Api
             IDbDocumentCollectionCreator creators = serviceProvider.GetService<IDbDocumentCollectionCreator>();
             creators.Create().Wait();
 
+            // Seed data from seeders
+            var dbDataSeeder = serviceProvider.GetService<IDbDataSeeder>();
+            dbDataSeeder.Seed().Wait();
+
         }
     }
 }

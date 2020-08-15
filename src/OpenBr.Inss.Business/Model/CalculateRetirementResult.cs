@@ -20,7 +20,7 @@
         /// <summary>
         /// Indicate value is limite value
         /// </summary>
-        public bool IsLimite { get; set; }
+        public bool IsLimit { get; set; }
 
     }
 
