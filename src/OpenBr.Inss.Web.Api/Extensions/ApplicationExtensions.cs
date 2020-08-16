@@ -91,8 +91,6 @@ namespace OpenBr.Inss.Web.Api.Extensions
                                 timeout: TimeSpan.FromSeconds(15),
                                 tags: new string[] { "mongodb" });
 
-            services.AddHealthChecksUI();
-
             return services;
 
         }
@@ -105,12 +103,11 @@ namespace OpenBr.Inss.Web.Api.Extensions
         {
 
             app
-                .UseHealthChecks("/selfcheck", new HealthCheckOptions
+                .UseHealthChecks("/hc", new HealthCheckOptions
                 {
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                })
-                .UseHealthChecksUI();
+                });
 
 
             return app;
