@@ -34,9 +34,9 @@ namespace OpenBr.LaborTaxes.Web.Api.Extensions
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
-                        Title = "OpenBrasil INSS",
+                        Title = "OpenBrasil Labor Taxes (Inss + Irpf)",
                         Version = "v1",
-                        Description = "INSS Calculator API",
+                        Description = "Labor Taxes Calculator API",
                         Contact = new OpenApiContact
                         {
                             Name = "Rodrigo Rodrigues",
@@ -64,7 +64,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenBrasil Inss v1.0");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenBrasil LaborTaxes v1.0");
                 c.RoutePrefix = string.Empty;
             });
 
