@@ -40,6 +40,7 @@ namespace OpenBr.LaborTaxes.Business.Infra.IoC
 
             // Services & Repositories
             services.AddScoped<IInssRepository, InssRepository>();
+            services.AddScoped<IIrpfRepository, IrpfRepository>();
             services.AddScoped<ILaborTaxesService, LaborTaxesService>();
 
             return services;

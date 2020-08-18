@@ -27,10 +27,10 @@ namespace OpenBr.LaborTaxes.Business.Services
         /// </summary>
         /// <param name="revenue"></param>
         /// <param name="revenue">Revenue value</param>
-        /// <param name="qtyDependents">Number of dependents</param>
+        /// <param name="dependentsNumber">Number of dependents</param>
         /// <param name="date">Reference date to calculate</param>
         /// <param name="cancellationToken">Operation cancelalation token</param>
-        Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, decimal qtyDependents, DateTime? date, CancellationToken cancellationToken = default);
+        Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, byte dependentsNumber, DateTime? date, CancellationToken cancellationToken = default);
 
     }
 }

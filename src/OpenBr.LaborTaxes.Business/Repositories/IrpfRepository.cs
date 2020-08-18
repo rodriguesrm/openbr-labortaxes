@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 namespace OpenBr.LaborTaxes.Business.Repositories
 {
 
-    public class IrfpRepository : RepositoryBase<IrpfTax>, IIrpfRepository, IDocumentCollectionCreator, IDataSeeder
+    public class IrpfRepository : RepositoryBase<IrpfTax>, IIrpfRepository, IDocumentCollectionCreator, IDataSeeder
     {
 
         #region Constructors
 
         ///<inheritdoc/>
-        public IrfpRepository(IMongoDatabase mongoDb) : base(mongoDb, "irpf")
+        public IrpfRepository(IMongoDatabase mongoDb) : base(mongoDb, "irpf")
         {
         }
 

@@ -1,9 +1,5 @@
 ﻿using OpenBr.LaborTaxes.Business.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OpenBr.LaborTaxes.Web.Api.Models
 {
@@ -24,6 +20,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Models
         /// <summary>
         /// Total revenue to base calculate
         /// </summary>
+        [Range(minimum: 0D, maximum: 999999.99D, ErrorMessage = "Revenue amount must be between 0.01 and 999999.99")]
         public decimal Revenue { get; set; }
 
     }

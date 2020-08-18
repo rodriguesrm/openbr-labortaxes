@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  
+  br-labortaxes:
+    container_name: br-labortaxes
+    build: 
+      context: .
+      dockerfile: OpenBr.LaborTaxes.Web.Api/Dockerfile
+    ports: 
+      - "5000:80"
+    environment:  
+      - ConnectionStrings:MongoDb=mongodb://admin:admin@mongoBrLaborTaxes:27017/labortaxes?authSource=admin&readPreference=primary&ssl=false
+      - HealthChecksUI:HealthChecks:0:Uri=http://localhost/selfcheck
+    depends_on: 
+      - "mongoBrLaborTaxes"
+    networks: 
+      - net-br-labortaxes
+      
+  mongoBrLaborTaxes:
+    container_name: mongoBrLaborTaxes
+    image: mongo
+    restart: always
+    ports:
+        - "27017:27017"
+    environment:
+        MONGO_INITDB_DATABASE: admin
+        MONGO_INITDB_ROOT_USERNAME: admin
+        MONGO_INITDB_ROOT_PASSWORD: admin
+    networks: 
+      - net-br-labortaxes
+
+networks: 
+  net-br-labortaxes:
+    driver: bridge

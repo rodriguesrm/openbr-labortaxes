@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Business"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Web.Api", "OpenBr.LaborTaxes.Web.Api\OpenBr.LaborTaxes.Web.Api.csproj", "{F41A8D81-CA8A-4DB7-A453-2DEB645F6C23}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "compose", "compose", "{15164262-1B4A-49C4-9A86-EFDFAA49A38D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

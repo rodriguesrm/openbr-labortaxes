@@ -74,7 +74,7 @@ namespace OpenBr.LaborTaxes.Business.Services
         }
 
         ///<inheritdoc/>
-        public async Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, decimal qtyDependents, DateTime? date, CancellationToken cancellationToken = default)
+        public async Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, byte dependentsNumber, DateTime? date, CancellationToken cancellationToken = default)
         {
 
             CalculateIrpfResult result = null;
@@ -83,7 +83,7 @@ namespace OpenBr.LaborTaxes.Business.Services
             if (irpf != null)
             {
 
-                decimal dependentsDeductionAmount = (qtyDependents + irpf.DeductionAmount);
+                decimal dependentsDeductionAmount = (dependentsNumber * irpf.DeductionAmount);
                 decimal calculationBasis = (revenue - inssValue - dependentsDeductionAmount);
 
                 IrpfTaxRange range = irpf
