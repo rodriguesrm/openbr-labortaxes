@@ -1,0 +1,12 @@
+﻿[
+  {
+    "dateStart": "2015-04-01", "dateEnd": null, "deductionAmount": 189.59, "inactive": false,
+    "range": [
+      { "startValue":    0.00, "endValue":   1903.98, "rate":  0.00, "deductedAmount":   0.00 },
+      { "startValue": 1903.99, "endValue":   2826.65, "rate":  7.50, "deductedAmount": 142.80 },
+      { "startValue": 2826.66, "endValue":   3751.05, "rate": 15.00, "deductedAmount": 354.80 },
+      { "startValue": 3751.06, "endValue":   4664.68, "rate": 22.50, "deductedAmount": 636.13 },
+      { "startValue": 4664.69, "endValue": 999999.99, "rate": 27.50, "deductedAmount": 869.36 }
+    ]
+  }
+]

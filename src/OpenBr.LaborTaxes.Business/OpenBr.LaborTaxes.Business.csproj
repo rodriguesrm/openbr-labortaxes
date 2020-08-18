@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <None Remove="Resources\inss.json" />
+    <None Remove="Resources\irpf.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\irpf.json" />
     <EmbeddedResource Include="Resources\inss.json" />
   </ItemGroup>
 

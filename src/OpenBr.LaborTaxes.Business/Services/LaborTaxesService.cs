@@ -18,7 +18,8 @@ namespace OpenBr.LaborTaxes.Business.Services
 
         #region Local objects/variables
 
-        private readonly IInssRepository _repository;
+        private readonly IInssRepository _inssRepository;
+        private readonly IIrpfRepository _irpfRepository;
 
         #endregion
 
@@ -27,9 +28,10 @@ namespace OpenBr.LaborTaxes.Business.Services
         /// <summary>
         /// Create a new service instance
         /// </summary>
-        public LaborTaxesService(IInssRepository repository)
+        public LaborTaxesService(IInssRepository inssRepository, IIrpfRepository irpfRepository)
         {
-            _repository = repository;
+            _inssRepository = inssRepository;
+            _irpfRepository = irpfRepository;
         }
 
         #endregion
@@ -40,14 +42,14 @@ namespace OpenBr.LaborTaxes.Business.Services
 
             CalculateInssResult result = null;
 
-            InssTax inss = await _repository.GetActive(type, date, cancellationToken);
+            InssTax inss = await _inssRepository.GetActive(type, date, cancellationToken);
             if (inss != null)
             {
                 InssTaxRange range = inss
                     .Range
                     .OrderByDescending(o => o.EndValue)
                     .FirstOrDefault(x => (revenue >= x.StartValue && revenue <= x.EndValue) || revenue >= x.EndValue);
-                
+
                 if (range != null)
                 {
 
@@ -70,5 +72,44 @@ namespace OpenBr.LaborTaxes.Business.Services
             return result;
 
         }
+
+        ///<inheritdoc/>
+        public async Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, decimal qtyDependents, DateTime? date, CancellationToken cancellationToken = default)
+        {
+
+            CalculateIrpfResult result = null;
+
+            IrpfTax irpf = await _irpfRepository.GetActive(date, cancellationToken);
+            if (irpf != null)
+            {
+
+                decimal dependentsDeductionAmount = (qtyDependents + irpf.DeductionAmount);
+                decimal calculationBasis = (revenue - inssValue - dependentsDeductionAmount);
+
+                IrpfTaxRange range = irpf
+                    .Range
+                    .OrderByDescending(o => o.EndValue)
+                    .FirstOrDefault(x => (calculationBasis >= x.StartValue && calculationBasis <= x.EndValue) || calculationBasis >= x.EndValue);
+
+                if (range != null)
+                {
+
+                    result = new CalculateIrpfResult
+                    {
+                        CalculationBasis = calculationBasis,
+                        Rate = range.Rate,
+                        DependentsDeductionAmount = dependentsDeductionAmount
+                    };
+
+                    result.Amount = Math.Round(((calculationBasis * (range.Rate / 100)) - range.DeductionAmount), 2);
+
+                }
+
+            }
+
+            return result;
+
+        }
+
     }
 }
