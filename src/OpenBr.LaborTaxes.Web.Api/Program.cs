@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenBr.LaborTaxes.Business.Infra.Log;
 
 namespace OpenBr.LaborTaxes.Web.Api
 {
@@ -25,6 +27,15 @@ namespace OpenBr.LaborTaxes.Web.Api
         /// <param name="args">Arguments list</param>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.AddXLogger(opt =>
+                    {
+                        opt.LogLevel = LogLevel.Information;
+                    });
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
