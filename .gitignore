@@ -245,5 +245,4 @@ ModelManifest.xml
 .fake/
 
 # Files project to ignore
-/src/OpenBr.LaborTaxes.Web.Api/OpenBr.Inss.Web.Api.xml
-src/OpenBr.LaborTaxes.Web.Api/wwwroot/data/hc.db
+/src/OpenBr.LaborTaxes.Web.Api/OpenBr.LaborTaxes.Web.Api.xml
