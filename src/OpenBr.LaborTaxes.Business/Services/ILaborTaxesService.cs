@@ -25,12 +25,21 @@ namespace OpenBr.LaborTaxes.Business.Services
         /// <summary>
         /// Calculates the rate and the amount of the Iprf tax
         /// </summary>
-        /// <param name="revenue"></param>
         /// <param name="revenue">Revenue value</param>
         /// <param name="dependentsNumber">Number of dependents</param>
         /// <param name="date">Reference date to calculate</param>
         /// <param name="cancellationToken">Operation cancelalation token</param>
         Task<CalculateIrpfResult> CalculateIrpf(decimal revenue, decimal inssValue, byte dependentsNumber, DateTime? date, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calculate net revenue by deducting inss and irpf
+        /// </summary>
+        /// <param name="type">Inss type</param>
+        /// <param name="revenue">Revenue value</param>
+        /// <param name="dependentsNumber">Number of dependents</param>
+        /// <param name="date">Reference date to calculate</param>
+        /// <param name="cancellationToken">Operation cancelalation token</param>
+        Task<CalculateNetRevenueResult> CalculateNetRevenue(InssType type, decimal revenue, byte dependentsNumber, DateTime? date, CancellationToken cancellationToken = default);
 
     }
 }

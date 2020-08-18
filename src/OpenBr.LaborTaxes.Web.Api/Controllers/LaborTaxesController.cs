@@ -70,5 +70,31 @@ namespace OpenBr.LaborTaxes.Web.Api.Controllers
             return Ok(resp);
         }
 
+        /// <summary>
+        /// Calculate net revenue by deducting inss and irpf
+        /// </summary>
+        /// <param name="service">Labor taxes service object</param>
+        /// <param name="request">Request data</param>
+        /// <param name="date">Reference date for calculate</param>
+        /// <param name="cancellationToken">Operation cancelalation token</param>
+        /// <response code="200">Operation sucess, return response data</response>
+        /// <response code="400">Bad request, see details</response>
+        [HttpPost("net-revenue")]
+        [ProducesResponseType(typeof(CalculateNetRevenueResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationModelResult), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CalculateNetRevenue
+        (
+            [FromServices] ILaborTaxesService service,
+            [FromBody] CalculateNetRevenueRequest request,
+            [FromQuery] DateTime? date,
+            CancellationToken cancellationToken = default
+        )
+        {
+            CalculateNetRevenueResult resp = await service.CalculateNetRevenue(request.Type.Value, request.Revenue, request.DependentsNumber, date, cancellationToken);
+            if (resp == null)
+                return BadRequest(resp);
+            return Ok(resp);
+        }
+
     }
 }
