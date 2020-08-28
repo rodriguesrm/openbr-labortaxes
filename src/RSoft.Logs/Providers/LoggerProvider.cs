@@ -11,7 +11,7 @@ namespace RSoft.Logs.Providers
     /// <summary>
     /// Abstract class to provider logger
     /// </summary>
-    public abstract class LoggerProvider : IDisposable, ILoggerProvider, ISupportExternalScope
+    internal abstract class LoggerProvider : IDisposable, ILoggerProvider, ISupportExternalScope
     {
 
         #region Local objects/variables
@@ -70,11 +70,10 @@ namespace RSoft.Logs.Providers
                     try
                     {
                         WriteLogEvent();
-                        //System.Threading.Thread.Sleep(100);
                     }
-                    catch // (Exception ex)
+                    catch (Exception ex)
                     {
-                        //TODO: Fix to correct handle exception
+                        Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
                     }
                 }
             });

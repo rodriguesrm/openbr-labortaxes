@@ -6,7 +6,7 @@ namespace RSoft.Logs.Model
     /// <summary>
     /// Exception info data
     /// </summary>
-    public class LogExceptionInfo
+    internal class LogExceptionInfo
     {
 
         /// <summary>
@@ -19,6 +19,7 @@ namespace RSoft.Logs.Model
             Message = exception.Message;
             StackTrace = exception.StackTrace;
             Source = exception.Source;
+            Type = exception.GetType();
 
             if (exception.InnerException != null)
                 InnerException = new LogExceptionInfo(exception.InnerException);
@@ -28,6 +29,11 @@ namespace RSoft.Logs.Model
         /// Gets HRESULT, a coded numerical value that is assigned to a specific exception.
         /// </summary>
         public int HResult { get; private set; }
+
+        /// <summary>
+        /// Exception type
+        /// </summary>
+        public Type Type { get; set; }
 
         /// <summary>
         /// Gets a message that describes the current exception.

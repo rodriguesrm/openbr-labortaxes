@@ -6,7 +6,7 @@ namespace RSoft.Logs.Model
     /// <summary>
     /// Log scope info data
     /// </summary>
-    public class LogScopeInfo
+    internal class LogScopeInfo
     {
 
         /// <summary>

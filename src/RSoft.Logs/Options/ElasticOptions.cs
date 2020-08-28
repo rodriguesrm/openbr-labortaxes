@@ -1,4 +1,6 @@
-﻿namespace RSoft.Logs.Options
+﻿using System.Collections.Generic;
+
+namespace RSoft.Logs.Options
 {
 
     /// <summary>
@@ -16,6 +18,11 @@
         /// Default index name
         /// </summary>
         public string DefaultIndexName { get; set; }
+
+        /// <summary>
+        /// Categories to ignore in the log
+        /// </summary>
+        public IEnumerable<string> IgnoreCategories { get; set; }
 
     }
 }

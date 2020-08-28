@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace RSoft.Logs.Options
 {
 
-    public class LoggerOptionsSetup : ConfigureFromConfigurationOptions<LoggerOptions>
+    internal class LoggerOptionsSetup : ConfigureFromConfigurationOptions<LoggerOptions>
     {
 
         private readonly IConfiguration _configuration;

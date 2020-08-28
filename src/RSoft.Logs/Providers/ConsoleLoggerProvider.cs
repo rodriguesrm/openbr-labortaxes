@@ -7,7 +7,7 @@ using System;
 
 namespace RSoft.Logs.Providers
 {
-    public class ConsoleLoggerProvider : LoggerProvider
+    internal class ConsoleLoggerProvider : LoggerProvider
     {
 
         #region Local objects/variables
@@ -53,7 +53,10 @@ namespace RSoft.Logs.Providers
 
         protected override void WriteLogAction(LogEntry info)
         {
-            Terminal.Print(info.Category, info.Level, info.Text, info.Exception);
+            bool printDate = true;
+            if (info.Category == "Microsoft.Hosting.Lifetime")
+                printDate = false;
+            Terminal.Print(info.Category, info.Level, info.Text, printDate, info.Exception);
         }
 
         #endregion

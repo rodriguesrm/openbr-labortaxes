@@ -13,6 +13,8 @@ namespace RSoft.Logs
 
         #region Local objects/variables
 
+        private const string margin = "     ";
+
         private readonly static string[] levelNames = new string[]
         {
             "TRC",
@@ -26,6 +28,25 @@ namespace RSoft.Logs
 
         #endregion
 
+        #region Local methods
+
+        /// <summary>
+        /// Write message in terminal with tab space
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="foregroundColor">Foreground color code</param>
+        /// <param name="backgroundColor">Background color code</param>
+        private static void WriteMessageWithTab(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+        {
+            Console.ResetColor();
+            Console.Write(margin);
+            Console.ForegroundColor = foregroundColor;
+            Console.BackgroundColor = backgroundColor;
+            Console.WriteLine(message);
+        }
+
+        #endregion
+
         #region Public methods
 
         /// <summary>
@@ -34,9 +55,8 @@ namespace RSoft.Logs
         /// <param name="category">Category logger</param>
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="message">Entry message</param>
-        /// <param name="ex">The exception related to this entry.</param>
-        public static void Print(string category, LogLevel level, string message, Exception ex = null)
-            => Print(category, level, message, new LogExceptionInfo(ex));
+        public static void Print(string category, LogLevel level, string message)
+            => Print(category, level, message, true, logException: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -44,8 +64,50 @@ namespace RSoft.Logs
         /// <param name="category">Category logger</param>
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="message">Entry message</param>
-        /// <param name="ex">The exception related to this entry.</param>
-        public static void Print(string category, LogLevel level, string message, LogExceptionInfo ex = null)
+        /// <param name="printDate">Indicate print date/time flag</param>
+        public static void Print(string category, LogLevel level, string message, bool printDate)
+            => Print(category, level, message, printDate, logException: null);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="exception">The exception related to this entry.</param>
+        public static void Print(string category, LogLevel level, string message, Exception exception)
+            => Print(category, level, message, true, new LogExceptionInfo(exception));
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="logException">The exception related to this entry.</param>
+        internal static void Print(string category, LogLevel level, string message, LogExceptionInfo logException)
+            => Print(category, level, message, true, logException);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="printDate">Indicate print date/time flag</param>
+        /// <param name="exception">The exception related to this entry.</param>
+        public static void Print(string category, LogLevel level, string message, bool printDate, Exception exception)
+            => Print(category, level, message, printDate, new LogExceptionInfo(exception));
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="printDate">Indicate print date/time flag</param>
+        /// <param name="logException">The exception related to this entry.</param>
+        internal static void Print(string category, LogLevel level, string message, bool printDate, LogExceptionInfo logException)
         {
 
             if (level == LogLevel.None)
@@ -59,10 +121,6 @@ namespace RSoft.Logs
             ConsoleColor messageBackgroundColor = Console.BackgroundColor;
             ConsoleColor errorForegroundColor = Console.ForegroundColor;
             ConsoleColor errorBackgroundColor = Console.BackgroundColor;
-
-            // Date
-            string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} [";
-            Console.Write(date);
 
             // Level
             switch (level)
@@ -104,30 +162,32 @@ namespace RSoft.Logs
 
             Console.ForegroundColor = levelForegroundColor;
             Console.BackgroundColor = levelBackgroundColor;
-            Console.Write(levelNames[(int)level]);
-
-            // Source
+            Console.Write($"{levelNames[(int)level]}");
             Console.ResetColor();
-            Console.Write($"]: [{category}] | ");
+            Console.Write(": ");
+
+            // Category / Date
+            Console.ResetColor();
+            string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} | ";
+            if (!printDate)
+                date = string.Empty;
+            Console.WriteLine($"{date}{category}[0]"); //TODO: RR = Add EventId
 
             // Message
 
             Console.ForegroundColor = messageForegroundColor;
             Console.BackgroundColor = messageBackgroundColor;
-            Console.Write(message);
+            Console.WriteLine($"{margin}{message}");
             Console.ResetColor();
-            Console.WriteLine(" |");
 
             // Exception
-            if (ex != null)
+            if (logException != null)
             {
-                Console.ForegroundColor = errorForegroundColor;
-                Console.BackgroundColor = errorBackgroundColor;
-                Console.WriteLine($"  ErrorMessage: {ex.Message}");
-                Console.WriteLine($"  Type: {ex.GetType()}");
-                Console.WriteLine($"  Source: {ex.Source}");
-                Console.WriteLine($"  StackTrace:");
-                Console.WriteLine($"   {ex.StackTrace.Trim()}");
+                WriteMessageWithTab($"ErrorMessage: {logException.Message}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"Type: {logException.Type}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"Source: {logException.Source}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"StackTrace:", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($" {logException.StackTrace?.Trim()}", errorForegroundColor, errorBackgroundColor);
             }
 
             Console.ResetColor();

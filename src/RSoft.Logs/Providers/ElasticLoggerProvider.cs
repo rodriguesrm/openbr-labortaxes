@@ -5,7 +5,7 @@ using nest = Nest;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
-using System.Configuration;
+using System.Linq;
 
 namespace RSoft.Logs.Providers
 {
@@ -13,13 +13,14 @@ namespace RSoft.Logs.Providers
     /// <summary>
     /// Log provider for elastic
     /// </summary>
-    public class ElasticLoggerProvider : LoggerProvider
+    internal class ElasticLoggerProvider : LoggerProvider
     {
 
         #region Local objects/variables
 
-        private nest.ConnectionSettings _settings;
-        private nest.ElasticClient _client;
+        private readonly nest.ConnectionSettings _settings;
+        private readonly nest.ElasticClient _client;
+        private readonly bool configIsOk;
 
         #endregion
 
@@ -32,7 +33,8 @@ namespace RSoft.Logs.Providers
         /// <param name="accessor">Http context acessor object</param>
         public ElasticLoggerProvider(IOptionsMonitor<LoggerOptions> options, IHttpContextAccessor accessor) : this(options.CurrentValue, accessor)
         {
-            _settingsChangeToken = options.OnChange(opt => {
+            _settingsChangeToken = options.OnChange(opt =>
+            {
                 Settings = opt;
             });
         }
@@ -45,22 +47,26 @@ namespace RSoft.Logs.Providers
         public ElasticLoggerProvider(LoggerOptions settings, IHttpContextAccessor accessor) : base(accessor)
         {
             Settings = settings;
-            _settings = new nest.ConnectionSettings(new Uri(settings.Elastic.Uri)).DefaultIndex(settings.Elastic.DefaultIndexName);
-            AddDefaultMappings(_settings);
-            _client = new nest.ElasticClient(_settings);
-            CreateIndex(_client, settings.Elastic.DefaultIndexName);
+
+            configIsOk = true;
 
             if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
             {
-                ConfigurationErrorsException ex = new ConfigurationErrorsException("Elastic 'Uri' configuration not found or invalid");
-                Terminal.Print("RSoft.Logs.Providers", LogLevel.Critical, ex.Message, ex);
-                throw ex;
+                configIsOk = false;
+                Terminal.Print(GetType().ToString(), LogLevel.Warning, "Elastic 'Uri' configuration not found or invalid, logger not work");
             }
             if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
             {
-                ConfigurationErrorsException ex = new ConfigurationErrorsException("Elastic 'DefaultIndexName' configuration not found or invalid");
-                Terminal.Print("RSoft.Logs.Providers", LogLevel.Critical, ex.Message, ex);
-                throw ex;
+                configIsOk = false;
+                Terminal.Print(GetType().ToString(), LogLevel.Warning, "Elastic 'DefaultIndexName' configuration not found or invalid, logger not work");
+            }
+
+            if (configIsOk)
+            {
+                _settings = new nest.ConnectionSettings(new Uri(settings.Elastic.Uri)).DefaultIndex(settings.Elastic.DefaultIndexName);
+                AddDefaultMappings(_settings);
+                _client = new nest.ElasticClient(_settings);
+                CreateIndex(_client, settings.Elastic.DefaultIndexName);
             }
 
         }
@@ -101,23 +107,11 @@ namespace RSoft.Logs.Providers
 
         protected override void WriteLogAction(LogEntry info)
         {
-
-            /*
-            //if (info.EventId.Id == MqEventId.EventId.Id)
-            //{
-            //TODO: WriteIndented will be configuration
-            // string json = JsonSerializer.Serialize(info, new JsonSerializerOptions() { IgnoreNullValues = false, PropertyNameCaseInsensitive = true, WriteIndented = false });
-            //Console.WriteLine(json);
-            if (info.Category == "Microsoft.Hosting.Lifetime")
-                Console.WriteLine(info.Text ?? info.StateText ?? info.State.ToString());
-            else
-                Console.WriteLine($"{info.TimeStamp.ToLocalTime():yyyy-MM-dd hh:mm:ss.fff} [{info.Level}]: {info.Text ?? info.StateText ?? info.State.ToString()}");
-            //    _rabbitMqUtil.SendMessageAsync(_channelName, json);
-            //}
-            */
-
-            _client.IndexDocument(info);
-
+            if (configIsOk)
+            {
+                if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
+                    _client.IndexDocument(info);
+            }
         }
 
         #endregion

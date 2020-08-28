@@ -9,7 +9,7 @@ namespace RSoft.Logs.Model
     /// <summary>
     /// Log entry data model
     /// </summary>
-    public class LogEntry
+    internal class LogEntry
     {
 
         /// <summary>

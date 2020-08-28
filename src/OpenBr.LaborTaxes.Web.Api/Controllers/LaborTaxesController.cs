@@ -42,27 +42,10 @@ namespace OpenBr.LaborTaxes.Web.Api.Controllers
             CancellationToken cancellationToken = default
         )
         {
-            logger.LogInformation("CalculateInss started");
             CalculateInssResult resp = await service.CalculateInss(request.Type.Value, request.Revenue, date, cancellationToken);
             if (resp == null)
-            {
-                logger.LogInformation("CalculateInss return 404-BadRequest");
                 return NotFound(resp);
-            }
-
-            try
-            {
-                throw new Exception("Teste Exception", new Exception("Inner exception test"));
-                
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                return StatusCode(500, ex.Message);
-            }
-
-            //logger.LogInformation("CalculateInss return 200-OK");
-            //return Ok(resp);
+            return Ok(resp);
         }
 
         /// <summary>

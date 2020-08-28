@@ -4,7 +4,7 @@
     /// <summary>
     /// Application logged user information
     /// </summary>
-    public class ApplicationUserInfo
+    internal class ApplicationUserInfo
     {
 
         /// <summary>

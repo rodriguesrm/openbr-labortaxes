@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RSoft.Logs
 {
-    public class Logger : ILogger
+    internal class Logger : ILogger
     {
 
         #region Local objects/variables
