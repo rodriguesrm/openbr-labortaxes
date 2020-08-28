@@ -53,12 +53,12 @@ namespace RSoft.Logs.Providers
             if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
             {
                 configIsOk = false;
-                Terminal.Print(GetType().ToString(), LogLevel.Warning, "Elastic 'Uri' configuration not found or invalid, logger not work");
+                Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'Uri' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
             }
             if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
             {
                 configIsOk = false;
-                Terminal.Print(GetType().ToString(), LogLevel.Warning, "Elastic 'DefaultIndexName' configuration not found or invalid, logger not work");
+                Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'DefaultIndexName' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
             }
 
             if (configIsOk)
@@ -110,7 +110,11 @@ namespace RSoft.Logs.Providers
             if (configIsOk)
             {
                 if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
-                    _client.IndexDocument(info);
+                {
+                    nest.IndexResponse resp = _client.IndexDocument(info);
+                    if (resp.Result == nest.Result.Error)
+                        Terminal.Print(GetType().ToString(), LogLevel.Error, resp.DebugInformation, resp.OriginalException);
+                }
             }
         }
 

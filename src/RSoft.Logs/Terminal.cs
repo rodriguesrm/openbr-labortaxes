@@ -13,8 +13,6 @@ namespace RSoft.Logs
 
         #region Local objects/variables
 
-        private const string margin = "     ";
-
         private readonly static string[] levelNames = new string[]
         {
             "TRC",
@@ -25,6 +23,11 @@ namespace RSoft.Logs
             "CRITICAL"
         };
 
+        #endregion
+
+        #region Constrants
+
+        public const string Margin = "     ";
 
         #endregion
 
@@ -39,7 +42,7 @@ namespace RSoft.Logs
         private static void WriteMessageWithTab(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
         {
             Console.ResetColor();
-            Console.Write(margin);
+            Console.Write(Margin);
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;
             Console.WriteLine(message);
@@ -177,7 +180,7 @@ namespace RSoft.Logs
 
             Console.ForegroundColor = messageForegroundColor;
             Console.BackgroundColor = messageBackgroundColor;
-            Console.WriteLine($"{margin}{message}");
+            Console.WriteLine($"{Margin}{message}");
             Console.ResetColor();
 
             // Exception
