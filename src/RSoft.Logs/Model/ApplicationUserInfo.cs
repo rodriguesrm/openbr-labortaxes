@@ -4,7 +4,7 @@
     /// <summary>
     /// Application logged user information
     /// </summary>
-    public class AuthenticatedUserInfo
+    public class ApplicationUserInfo
     {
 
         /// <summary>
@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="user">User login</param>
         /// <param name="token">Authorization token</param>
-        public AuthenticatedUserInfo(string user, string token)
+        public ApplicationUserInfo(string user, string token)
         {
             User = user;
             Token = token;

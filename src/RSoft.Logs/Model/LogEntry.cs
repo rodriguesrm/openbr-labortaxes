@@ -13,6 +13,11 @@ namespace RSoft.Logs.Model
     {
 
         /// <summary>
+        /// Utc timestamp
+        /// </summary>
+        public DateTime TimeStamp => DateTime.UtcNow;
+
+        /// <summary>
         /// Operating system user running the application or service
         /// </summary>
         public string SystemUser { get; private set; }
@@ -20,17 +25,12 @@ namespace RSoft.Logs.Model
         /// <summary>
         /// Authenticated user information on the system
         /// </summary>
-        public AuthenticatedUserInfo AuthenticatedUser { get; set; }
+        public ApplicationUserInfo ApplicationUser { get; set; }
 
         /// <summary>
         /// Host machine name
         /// </summary>
         public string HostName => Dns.GetHostName();
-
-        /// <summary>
-        /// Utc timestamp
-        /// </summary>
-        public DateTime TimeStampUtc { get; private set; }
         
         /// <summary>
         /// Category name

@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using nest = Nest;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
-using System.Collections.Concurrent;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace RSoft.Logs.Providers
 {
@@ -20,8 +18,6 @@ namespace RSoft.Logs.Providers
         #region Local objects/variables
 
         const string _channelName = "channelName"; //TODO: Change to configuration
-        private bool terminated;
-        private readonly ConcurrentQueue<LogEntry> _entryQueue = new ConcurrentQueue<LogEntry>();
 
         #endregion
 
@@ -47,7 +43,6 @@ namespace RSoft.Logs.Providers
         public ElasticLoggerProvider(LoggerOptions settings, IHttpContextAccessor accessor) : base(accessor)
         {
             Settings = settings;
-            ProcessLog();
         }
 
         #endregion
@@ -64,45 +59,24 @@ namespace RSoft.Logs.Providers
         #region Local methods
 
         /// <summary>
-        /// Write log event int destination
+        /// Create index on elastic server
         /// </summary>
-        private void WriteLogEvent()
+        /// <param name="client">Elastic client object instance</param>
+        /// <param name="indexName">Index name to create</param>
+        private void CreateIndex(nest.IElasticClient client, string indexName)
         {
-            LogEntry info = null;
-            if (_entryQueue.TryDequeue(out info))
-            {
-                //if (info.EventId.Id == MqEventId.EventId.Id)
-                //{
-                //TODO: WriteIndented will be configuration
-                string json = JsonSerializer.Serialize(info, new JsonSerializerOptions() { IgnoreNullValues = false, PropertyNameCaseInsensitive = true, WriteIndented = false });
-                //Console.WriteLine(json);
-                Console.WriteLine(info.State);
-                //    _rabbitMqUtil.SendMessageAsync(_channelName, json);
-                //}
-
-            }
+            var createIndexResponse = client.Indices.Create(indexName,
+                index => index.Map<LogEntry>(x => x.AutoMap())
+            );
         }
 
         /// <summary>
-        /// Star thread to process log
+        /// Add default mapping model to elastic
         /// </summary>
-        private void ProcessLog()
+        /// <param name="settings"></param>
+        private void AddDefaultMappings(nest.ConnectionSettings settings)
         {
-            Task.Run(() => {
-
-                while (!terminated)
-                {
-                    try
-                    {
-                        WriteLogEvent();
-                        System.Threading.Thread.Sleep(100);
-                    }
-                    catch // (Exception ex)
-                    {
-                        //TODO: Fix to correct handle exception
-                    }
-                }
-            });
+            settings.DefaultMappingFor<LogEntry>(m => m);
         }
 
         #endregion
@@ -122,12 +96,6 @@ namespace RSoft.Logs.Providers
 
         }
 
-        ///<inheritdoc/>
-        public override void WriteLog(LogEntry info)
-        {
-            _entryQueue.Enqueue(info);
-        }
-
         #endregion
 
         #region IDisposable Support
@@ -135,8 +103,37 @@ namespace RSoft.Logs.Providers
         ///<inheritdoc/>
         protected override void Dispose(bool disposing)
         {
-            terminated = true;
+            _terminated = true;
             base.Dispose(disposing);
+        }
+
+        protected override void WriteLogAction(LogEntry info)
+        {
+
+            /*
+            //if (info.EventId.Id == MqEventId.EventId.Id)
+            //{
+            //TODO: WriteIndented will be configuration
+            // string json = JsonSerializer.Serialize(info, new JsonSerializerOptions() { IgnoreNullValues = false, PropertyNameCaseInsensitive = true, WriteIndented = false });
+            //Console.WriteLine(json);
+            if (info.Category == "Microsoft.Hosting.Lifetime")
+                Console.WriteLine(info.Text ?? info.StateText ?? info.State.ToString());
+            else
+                Console.WriteLine($"{info.TimeStamp.ToLocalTime():yyyy-MM-dd hh:mm:ss.fff} [{info.Level}]: {info.Text ?? info.StateText ?? info.State.ToString()}");
+            //    _rabbitMqUtil.SendMessageAsync(_channelName, json);
+            //}
+            */
+
+            var url = "http://192.168.3.1:9200";
+            var defaultIndex = "pock-nest-elk-actors";
+
+            nest.ConnectionSettings settings = new nest.ConnectionSettings(new Uri(url)).DefaultIndex(defaultIndex);
+            AddDefaultMappings(settings);
+
+            nest.ElasticClient client = new nest.ElasticClient(settings);
+            CreateIndex(client, defaultIndex);
+            client.IndexDocument(info);
+
         }
 
         #endregion

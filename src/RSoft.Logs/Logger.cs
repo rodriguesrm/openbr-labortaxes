@@ -41,10 +41,10 @@ namespace RSoft.Logs
         /// <summary>
         /// Get signed user information data (login and token)
         /// </summary>
-        private AuthenticatedUserInfo GetSignedUserInformation()
+        private ApplicationUserInfo GetSignedUserInformation()
         {
 
-            AuthenticatedUserInfo result = null;
+            ApplicationUserInfo result = null;
 
             try
             {
@@ -52,7 +52,7 @@ namespace RSoft.Logs
                 string token = _accessor?.HttpContext?.Request?.Headers?.FirstOrDefault(f => f.Key == "Authorization").Value.FirstOrDefault(x => x.ToLower().StartsWith("bearer"));
 
                 if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(token))
-                    result =  new AuthenticatedUserInfo(user, token);
+                    result =  new ApplicationUserInfo(user, token);
 
             }
             catch { /* Not to do. Fire and forget */ }
@@ -94,7 +94,7 @@ namespace RSoft.Logs
                     Exception = exception != null ? new LogExceptionInfo(exception) : null,
                     EventId = eventId,
                     State = state,
-                    AuthenticatedUser = GetSignedUserInformation()
+                    ApplicationUser = GetSignedUserInformation()
                 };
 
                 if (state is string)

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RSoft.Logs.Model;
 using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace RSoft.Logs.Providers
 {
@@ -16,9 +17,11 @@ namespace RSoft.Logs.Providers
         #region Local objects/variables
 
         private readonly ConcurrentDictionary<string, Logger> _logger = new ConcurrentDictionary<string, Logger>();
+        private readonly IHttpContextAccessor _accessor;
         private IExternalScopeProvider _scopeProvider;
-        private IHttpContextAccessor _accessor;
+        protected bool _terminated;
 
+        protected readonly ConcurrentQueue<LogEntry> _entryQueue = new ConcurrentQueue<LogEntry>();
         protected IDisposable _settingsChangeToken;
 
         #endregion
@@ -32,9 +35,54 @@ namespace RSoft.Logs.Providers
         public LoggerProvider(IHttpContextAccessor accessor)
         {
             _accessor = accessor;
+            ProcessLog();
         }
 
         #endregion
+
+        #region Local methods
+
+        /// <summary>
+        /// Write log event int destination
+        /// </summary>
+        private void WriteLogEvent()
+        {
+            LogEntry info = null;
+            if (_entryQueue.TryDequeue(out info))
+                WriteLogAction(info);
+        }
+
+        /// <summary>
+        /// Effective action to write log on destiny
+        /// </summary>
+        /// <param name="info"></param>
+        protected abstract void WriteLogAction(LogEntry info);
+
+        /// <summary>
+        /// Star thread to process log
+        /// </summary>
+        private void ProcessLog()
+        {
+            Task.Run(() => {
+
+                while (!_terminated)
+                {
+                    try
+                    {
+                        WriteLogEvent();
+                        //System.Threading.Thread.Sleep(100);
+                    }
+                    catch // (Exception ex)
+                    {
+                        //TODO: Fix to correct handle exception
+                    }
+                }
+            });
+        }
+
+        #endregion
+
+        #region Public methods
 
         ///<inheritdoc/>
         void ISupportExternalScope.SetScopeProvider(IExternalScopeProvider scopeProvider)
@@ -61,7 +109,10 @@ namespace RSoft.Logs.Providers
         /// Write log into destiny (storage, api, etc)
         /// </summary>
         /// <param name="info">Log entry data object</param>
-        public abstract void WriteLog(LogEntry info);
+        public virtual void WriteLog(LogEntry info)
+        {
+            _entryQueue.Enqueue(info);
+        }
 
         /// <summary>
         /// External data scope provider 
@@ -75,6 +126,8 @@ namespace RSoft.Logs.Providers
                 return _scopeProvider;
             }
         }
+
+        #endregion
 
         #region IDisposable Support
 
