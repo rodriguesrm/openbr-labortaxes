@@ -49,6 +49,20 @@ namespace RSoft.Logs.Providers
             AddDefaultMappings(_settings);
             _client = new nest.ElasticClient(_settings);
             CreateIndex(_client, settings.Elastic.DefaultIndexName);
+
+            if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
+            {
+                ConfigurationErrorsException ex = new ConfigurationErrorsException("Elastic 'Uri' configuration not found or invalid");
+                Terminal.Print("RSoft.Logs.Providers", LogLevel.Critical, ex.Message, ex);
+                throw ex;
+            }
+            if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
+            {
+                ConfigurationErrorsException ex = new ConfigurationErrorsException("Elastic 'DefaultIndexName' configuration not found or invalid");
+                Terminal.Print("RSoft.Logs.Providers", LogLevel.Critical, ex.Message, ex);
+                throw ex;
+            }
+
         }
 
         #endregion

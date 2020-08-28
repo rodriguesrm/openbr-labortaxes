@@ -30,8 +30,8 @@ namespace OpenBr.LaborTaxes.Web.Api
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    //logging.AddConsole();
-                    logging.AddElasticLogger();
+                    logging.AddConsoleLogger();
+                    //logging.AddElasticLogger();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

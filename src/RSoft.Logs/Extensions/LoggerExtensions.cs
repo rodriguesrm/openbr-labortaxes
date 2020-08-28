@@ -17,6 +17,30 @@ namespace RSoft.Logs.Extensions
     public static class LoggerExtensions
     {
 
+        public static ILoggingBuilder AddConsoleLogger(this ILoggingBuilder builder)
+        {
+
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, ConsoleLoggerProvider>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<LoggerOptions>, LoggerOptionsSetup>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IOptionsChangeTokenSource<LoggerOptions>, LoggerProviderOptionsChangeTokenSource<LoggerOptions, ConsoleLoggerProvider>>());
+            builder.Services.AddHttpContextAccessor();
+
+            return builder;
+
+        }
+
+        public static ILoggingBuilder AddConsoleLogger(this ILoggingBuilder builder, Action<LoggerOptions> configure)
+        {
+            if (configure == null)
+                throw new ArgumentNullException(nameof(configure));
+
+            builder.AddConsoleLogger();
+            builder.Services.Configure(configure);
+
+            return builder;
+
+        }
+
         public static ILoggingBuilder AddElasticLogger(this ILoggingBuilder builder)
         {
 

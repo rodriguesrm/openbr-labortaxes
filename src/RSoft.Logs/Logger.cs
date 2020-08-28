@@ -103,10 +103,12 @@ namespace RSoft.Logs
                 }
                 else if (state is IEnumerable<KeyValuePair<string, object>> properties)
                 {
+
                     info.StateProperties = new Dictionary<string, object>();
                     foreach (KeyValuePair<string, object> item in properties)
                     {
-                        info.StateProperties[item.Key] = item.Value;
+                        if (item.Key != "{OriginalFormat}")
+                            info.StateProperties[item.Key] = item.Value;
                     }
                 }
 
