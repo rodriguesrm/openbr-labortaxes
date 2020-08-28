@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenBr.LaborTaxes.Business.Infra.Log;
+using RSoft.Logs.Extensions;
 
 namespace OpenBr.LaborTaxes.Web.Api
 {
@@ -30,8 +30,8 @@ namespace OpenBr.LaborTaxes.Web.Api
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.AddConsole();
-                    logging.AddXLogger(opt =>
+                    //logging.AddConsole();
+                    logging.AddElasticLogger(opt =>
                     {
                         opt.LogLevel = LogLevel.Information;
                     });

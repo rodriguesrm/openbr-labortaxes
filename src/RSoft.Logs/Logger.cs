@@ -1,26 +1,154 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using RSoft.Logs.Model;
+using RSoft.Logs.Providers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RSoft.Logs
 {
     public class Logger : ILogger
     {
+
+        #region Local objects/variables
+
+        private readonly LoggerProvider _provider;
+        private readonly string _category;
+        private readonly IHttpContextAccessor _accessor;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Create a new instance of Logger
+        /// </summary>
+        /// <param name="provider">Log provider object instance</param>
+        /// <param name="category">Log category name/identification</param>
+        /// <param name="accessor">Http context accessor object</param>
+        public Logger(LoggerProvider provider, string category, IHttpContextAccessor accessor)
+        {
+            _provider = provider;
+            _category = category;
+            _accessor = accessor;
+        }
+
+        #endregion
+
+        #region Local methods
+
+        /// <summary>
+        /// Get signed user information data (login and token)
+        /// </summary>
+        private AuthenticatedUserInfo GetSignedUserInformation()
+        {
+
+            AuthenticatedUserInfo result = null;
+
+            try
+            {
+                string user = _accessor?.HttpContext?.User?.Claims?.FirstOrDefault(f => f.Type.EndsWith("nameidentifier"))?.Value;
+                string token = _accessor?.HttpContext?.Request?.Headers?.FirstOrDefault(f => f.Key == "Authorization").Value.FirstOrDefault(x => x.ToLower().StartsWith("bearer"));
+
+                if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(token))
+                    result =  new AuthenticatedUserInfo(user, token);
+
+            }
+            catch { /* Not to do. Fire and forget */ }
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region Public methods
+
+        ///<inheritdoc/>
         public IDisposable BeginScope<TState>(TState state)
-        {
-            //TODO: NotImplementedException
-            throw new NotImplementedException();
-        }
+            => _provider.ScopeProvider.Push(state);
 
+        ///<inheritdoc/>
         public bool IsEnabled(LogLevel logLevel)
+            => _provider.IsEnabled(logLevel);
+
+        ///<inheritdoc/>
+        public void Log<TState>
+        (
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception exception,
+            Func<TState, Exception, string> formatter)
         {
-            //TODO: NotImplementedException
-            throw new NotImplementedException();
+
+            if ((this as ILogger).IsEnabled(logLevel))
+            {
+
+                LogEntry info = new LogEntry()
+                {
+                    Category = _category,
+                    Level = logLevel,
+                    Text = exception?.Message ?? state.ToString(),
+                    Exception = exception != null ? new LogExceptionInfo(exception) : null,
+                    EventId = eventId,
+                    State = state,
+                    AuthenticatedUser = GetSignedUserInformation()
+                };
+
+                if (state is string)
+                {
+                    info.StateText = state.ToString();
+                }
+                else if (state is IEnumerable<KeyValuePair<string, object>> properties)
+                {
+                    info.StateProperties = new Dictionary<string, object>();
+                    foreach (KeyValuePair<string, object> item in properties)
+                    {
+                        info.StateProperties[item.Key] = item.Value;
+                    }
+                }
+
+                if (_provider.ScopeProvider != null)
+                {
+
+                    _provider.ScopeProvider.ForEachScope((value, loggingProps) =>
+                    {
+
+                        if (info.Scopes == null)
+                            info.Scopes = new List<LogScopeInfo>();
+
+                        LogScopeInfo scope = new LogScopeInfo();
+
+                        if (value is string)
+                        {
+                            scope.Text = value.ToString();
+                        }
+                        else if (value is IEnumerable<KeyValuePair<string, object>> props)
+                        {
+                            if (scope.Properties == null)
+                                scope.Properties = new Dictionary<string, object>();
+                            foreach (KeyValuePair<string, object> pair in props)
+                            {
+                                scope.Properties[pair.Key] = pair.Value;
+                            }
+                        }
+
+                        info.Scopes.Add(scope);
+
+
+                    }, state);
+
+                }
+
+                _provider.WriteLog(info);
+
+            }
+
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            //TODO: NotImplementedException
-            throw new NotImplementedException();
-        }
+        #endregion
+
     }
 }

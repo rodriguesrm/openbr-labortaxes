@@ -6,12 +6,12 @@ using Microsoft.Extensions.Options;
 namespace RSoft.Logs.Options
 {
 
-    public class MqLoggerOptionsSetup : ConfigureFromConfigurationOptions<LoggerOptions>
+    public class LoggerOptionsSetup : ConfigureFromConfigurationOptions<LoggerOptions>
     {
 
         private readonly IConfiguration _configuration;
 
-        public MqLoggerOptionsSetup(ILoggerProviderConfiguration<ILoggerProvider> providerConfiguration, IConfiguration configuration) : base(providerConfiguration.Configuration)
+        public LoggerOptionsSetup(ILoggerProviderConfiguration<ILoggerProvider> providerConfiguration, IConfiguration configuration) : base(providerConfiguration.Configuration)
         {
             _configuration = configuration;
         }

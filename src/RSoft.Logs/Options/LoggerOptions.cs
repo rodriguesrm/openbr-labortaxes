@@ -10,6 +10,11 @@ namespace RSoft.Logs.Options
     {
 
         /// <summary>
+        /// Create a new logger options instance
+        /// </summary>
+        public LoggerOptions() { }
+
+        /// <summary>
         /// Logging severity levels
         /// </summary>
         public LogLevel LogLevel { get; set; } = LogLevel.Information;

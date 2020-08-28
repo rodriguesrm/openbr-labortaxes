@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenBr.LaborTaxes.Business\OpenBr.LaborTaxes.Business.csproj" />
+    <ProjectReference Include="..\RSoft.Logs\RSoft.Logs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
