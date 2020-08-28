@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Options;
+using System.Configuration;
 
 namespace RSoft.Logs.Options
 {
@@ -19,8 +20,15 @@ namespace RSoft.Logs.Options
         public override void Configure(LoggerOptions options)
         {
             base.Configure(options);
-            //TODO: NotImplementedException
-            //options.ConnectionString = ... 
+            
+            options.Elastic = new ElasticOptions();
+            _configuration.GetSection("Logging:Elastic").Bind(options.Elastic);
+
+            if (string.IsNullOrWhiteSpace(options.Elastic.Uri))
+                throw new ConfigurationErrorsException("Elastic 'Uri' configuration not found or invalid");
+            if (string.IsNullOrWhiteSpace(options.Elastic.DefaultIndexName))
+                throw new ConfigurationErrorsException("Elastic 'DefaultIndexName' configuration not found or invalid");
+
         }
 
     }
