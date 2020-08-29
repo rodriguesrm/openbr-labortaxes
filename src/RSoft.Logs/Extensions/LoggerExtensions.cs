@@ -17,6 +17,16 @@ namespace RSoft.Logs.Extensions
     public static class LoggerExtensions
     {
 
+        public static IServiceCollection AddMiddlewareLoggingOption(this IServiceCollection services)
+        {
+
+            return services;
+        }
+
+        /// <summary>
+        /// Add RSoft Console Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
         public static ILoggingBuilder AddConsoleLogger(this ILoggingBuilder builder)
         {
 
@@ -29,6 +39,11 @@ namespace RSoft.Logs.Extensions
 
         }
 
+        /// <summary>
+        /// Add RSoft Console Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
+        /// <param name="configure">Action configure option</param>
         public static ILoggingBuilder AddConsoleLogger(this ILoggingBuilder builder, Action<LoggerOptions> configure)
         {
             if (configure == null)
