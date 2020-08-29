@@ -59,7 +59,17 @@ namespace RSoft.Logs
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="message">Entry message</param>
         public static void Print(string category, LogLevel level, string message)
-            => Print(category, level, message, true, logException: null);
+            => Print(category, level, default, message, true, logException: null);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
+        /// <param name="message">Entry message</param>
+        public static void Print(string category, LogLevel level, EventId eventId, string message)
+            => Print(category, level, eventId, message, true, logException: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -69,7 +79,18 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="printDate">Indicate print date/time flag</param>
         public static void Print(string category, LogLevel level, string message, bool printDate)
-            => Print(category, level, message, printDate, logException: null);
+            => Print(category, level, default, message, printDate, logException: null);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="printDate">Indicate print date/time flag</param>
+        public static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate)
+            => Print(category, level, eventId, message, printDate, logException: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -79,7 +100,18 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="exception">The exception related to this entry.</param>
         public static void Print(string category, LogLevel level, string message, Exception exception)
-            => Print(category, level, message, true, new LogExceptionInfo(exception));
+            => Print(category, level, default, message, true, new LogExceptionInfo(exception));
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="exception">The exception related to this entry.</param>
+        public static void Print(string category, LogLevel level, EventId eventId, string message, Exception exception)
+            => Print(category, level, eventId, message, true, new LogExceptionInfo(exception));
 
         /// <summary>
         /// Print message in console terminal
@@ -89,7 +121,29 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="logException">The exception related to this entry.</param>
         internal static void Print(string category, LogLevel level, string message, LogExceptionInfo logException)
-            => Print(category, level, message, true, logException);
+            => Print(category, level, default, message, true, logException);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="logException">The exception related to this entry.</param>
+        internal static void Print(string category, LogLevel level, string message, bool printDate, LogExceptionInfo logException)
+            => Print(category, level, default, message, printDate, logException);
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="printDate">Indicate print date/time flag</param>
+        /// <param name="logException">The exception related to this entry.</param>
+        internal static void Print(string category, LogLevel level, EventId eventId, string message, LogExceptionInfo logException)
+            => Print(category, level, eventId, message, true, logException);
 
         /// <summary>
         /// Print message in console terminal
@@ -100,17 +154,30 @@ namespace RSoft.Logs
         /// <param name="printDate">Indicate print date/time flag</param>
         /// <param name="exception">The exception related to this entry.</param>
         public static void Print(string category, LogLevel level, string message, bool printDate, Exception exception)
-            => Print(category, level, message, printDate, new LogExceptionInfo(exception));
+            => Print(category, level, default, message, printDate, new LogExceptionInfo(exception));
 
         /// <summary>
         /// Print message in console terminal
         /// </summary>
         /// <param name="category">Category logger</param>
         /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
+        /// <param name="message">Entry message</param>
+        /// <param name="printDate">Indicate print date/time flag</param>
+        /// <param name="exception">The exception related to this entry.</param>
+        public static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate, Exception exception)
+            => Print(category, level, eventId, message, printDate, new LogExceptionInfo(exception));
+
+        /// <summary>
+        /// Print message in console terminal
+        /// </summary>
+        /// <param name="category">Category logger</param>
+        /// <param name="level">Entry will be written on this level.</param>
+        /// <param name="eventId">Identifies a logging event</param>
         /// <param name="message">Entry message</param>
         /// <param name="printDate">Indicate print date/time flag</param>
         /// <param name="logException">The exception related to this entry.</param>
-        internal static void Print(string category, LogLevel level, string message, bool printDate, LogExceptionInfo logException)
+        internal static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate, LogExceptionInfo logException)
         {
 
             if (level == LogLevel.None)
@@ -174,10 +241,9 @@ namespace RSoft.Logs
             string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} | ";
             if (!printDate)
                 date = string.Empty;
-            Console.WriteLine($"{date}{category}[0]"); //TODO: RR = Add EventId
+            Console.WriteLine($"{date}{category}[{eventId.Id}]");
 
             // Message
-
             Console.ForegroundColor = messageForegroundColor;
             Console.BackgroundColor = messageBackgroundColor;
             Console.WriteLine($"{Margin}{message}");
