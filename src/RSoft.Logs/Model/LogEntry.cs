@@ -15,7 +15,7 @@ namespace RSoft.Logs.Model
         /// <summary>
         /// Utc timestamp
         /// </summary>
-        public DateTime TimeStamp => DateTime.UtcNow;
+        public DateTime Timestamp => DateTime.UtcNow;
 
         /// <summary>
         /// Operating system user running the application or service

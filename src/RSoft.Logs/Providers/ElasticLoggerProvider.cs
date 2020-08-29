@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using nest = Nest;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace RSoft.Logs.Providers
 {
@@ -18,9 +20,10 @@ namespace RSoft.Logs.Providers
 
         #region Local objects/variables
 
-        private readonly nest.ConnectionSettings _settings;
-        private readonly nest.ElasticClient _client;
-        private readonly bool configIsOk;
+        private readonly HttpClient _client;
+        private bool configIsOk;
+        private string _indexName;
+        private readonly JsonSerializerOptions _serializerOptions;
 
         #endregion
 
@@ -31,7 +34,8 @@ namespace RSoft.Logs.Providers
         /// </summary>
         /// <param name="options">Options monitor to logger configuration</param>
         /// <param name="accessor">Http context acessor object</param>
-        public ElasticLoggerProvider(IOptionsMonitor<LoggerOptions> options, IHttpContextAccessor accessor) : this(options.CurrentValue, accessor)
+        /// <param name="factory">Http client factory object</param>
+        public ElasticLoggerProvider(IOptionsMonitor<LoggerOptions> options, IHttpContextAccessor accessor, IHttpClientFactory factory) : this(options.CurrentValue, accessor, factory)
         {
             _settingsChangeToken = options.OnChange(opt =>
             {
@@ -44,11 +48,14 @@ namespace RSoft.Logs.Providers
         /// </summary>
         /// <param name="settings">Logger options config settings</param>
         /// <param name="accessor">Http context acessor object</param>
-        public ElasticLoggerProvider(LoggerOptions settings, IHttpContextAccessor accessor) : base(accessor)
+        /// <param name="factory">Http client factory object</param>
+        public ElasticLoggerProvider(LoggerOptions settings, IHttpContextAccessor accessor, IHttpClientFactory factory) : base(accessor)
         {
             Settings = settings;
 
             configIsOk = true;
+            //_client = new HttpClient();
+            _client = factory.CreateClient();
 
             if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
             {
@@ -63,10 +70,14 @@ namespace RSoft.Logs.Providers
 
             if (configIsOk)
             {
-                _settings = new nest.ConnectionSettings(new Uri(settings.Elastic.Uri)).DefaultIndex(settings.Elastic.DefaultIndexName);
-                AddDefaultMappings(_settings);
-                _client = new nest.ElasticClient(_settings);
-                CreateIndex(_client, settings.Elastic.DefaultIndexName);
+                _client.BaseAddress = new Uri(Settings.Elastic.Uri);
+                _indexName = Settings.Elastic.DefaultIndexName;
+                _serializerOptions = new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false,
+                    IgnoreNullValues = true
+                };
             }
 
         }
@@ -84,26 +95,6 @@ namespace RSoft.Logs.Providers
 
         #region Local methods
 
-        /// <summary>
-        /// Create index on elastic server
-        /// </summary>
-        /// <param name="client">Elastic client object instance</param>
-        /// <param name="indexName">Index name to create</param>
-        private void CreateIndex(nest.IElasticClient client, string indexName)
-        {
-            var createIndexResponse = client.Indices.Create(Settings.Elastic.DefaultIndexName,
-                index => index.Map<LogEntry>(x => x.AutoMap())
-            );
-        }
-
-        /// <summary>
-        /// Add default mapping model to elastic
-        /// </summary>
-        /// <param name="settings"></param>
-        private void AddDefaultMappings(nest.ConnectionSettings settings)
-        {
-            settings.DefaultMappingFor<LogEntry>(m => m);
-        }
 
         protected override void WriteLogAction(LogEntry info)
         {
@@ -111,9 +102,23 @@ namespace RSoft.Logs.Providers
             {
                 if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
                 {
-                    nest.IndexResponse resp = _client.IndexDocument(info);
-                    if (resp.Result == nest.Result.Error)
-                        Terminal.Print(GetType().ToString(), LogLevel.Error, resp.DebugInformation, resp.OriginalException);
+
+                    try
+                    {
+                        string message = JsonSerializer.Serialize(info, _serializerOptions);
+                        StringContent content = new StringContent(message, Encoding.UTF8, "application/json");
+                        HttpResponseMessage resp = _client.PostAsync($"{_indexName}/_doc", content).GetAwaiter().GetResult();
+                        if (!resp.IsSuccessStatusCode)
+                        {
+                            string responseBody = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            Terminal.Print(GetType().ToString(), LogLevel.Error, responseBody);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Terminal.Print(GetType().ToString(), LogLevel.Error, ex.Message, ex);
+                    }
+
                 }
             }
         }

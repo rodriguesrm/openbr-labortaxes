@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Options;
 using RSoft.Logs.Options;
 using RSoft.Logs.Providers;
 using System;
+using System.Net.Http;
 
 namespace RSoft.Logs.Extensions
 {
@@ -59,20 +59,11 @@ namespace RSoft.Logs.Extensions
         public static ILoggingBuilder AddElasticLogger(this ILoggingBuilder builder)
         {
 
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IHttpClientFactory, HttpClientFactory>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, ElasticLoggerProvider>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<LoggerOptions>, LoggerOptionsSetup>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IOptionsChangeTokenSource<LoggerOptions>, LoggerProviderOptionsChangeTokenSource<LoggerOptions, ElasticLoggerProvider>>());
             builder.Services.AddHttpContextAccessor();
-
-            //string id = configuration["Logging:EventId:Id"];
-            //string eventName = configuration["Logging:EventId:Name"];
-
-            //if (!int.TryParse(id, out int eventId))
-            //    eventId = 7007;
-            //if (string.IsNullOrWhiteSpace(eventName))
-            //    eventName = "Farmarcas.Radar.Logs";
-
-            //MqEventId.EventId = new EventId(eventId, eventName);
 
             return builder;
 

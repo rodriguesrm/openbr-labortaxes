@@ -47,8 +47,7 @@ namespace RSoft.Logs.Providers
         /// </summary>
         private void WriteLogEvent()
         {
-            LogEntry info = null;
-            if (_entryQueue.TryDequeue(out info))
+            if (_entryQueue.TryDequeue(out LogEntry info))
                 WriteLogAction(info);
         }
 
