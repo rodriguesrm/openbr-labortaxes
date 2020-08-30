@@ -5,6 +5,7 @@ using RSoft.Logs.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace RSoft.Logs
 {
@@ -101,6 +102,63 @@ namespace RSoft.Logs
                 {
                     info.StateText = state.ToString();
                 }
+                else if (state is AuditRequestInfo auditRequest)
+                {
+
+                    info.Text = formatter(state, exception);
+                    LogScopeInfo scope = new LogScopeInfo
+                    {
+                        Text = $"{auditRequest.Id} | {auditRequest.Method} {auditRequest.RawUrl}"
+                    };
+
+                    IDictionary<string, object> dicScope = new Dictionary<string, object>
+                    {
+                        { "Id", auditRequest.Id },
+                        { "Date", auditRequest.Date },
+                        { "Scheme", auditRequest.Scheme },
+                        { "Headers", auditRequest.Headers },
+                        { "Path", auditRequest.Path },
+                        { "Method", auditRequest.Method },
+                        { "Host", auditRequest.Host },
+                        { "QueryString", auditRequest.QueryString },
+                        { "Body", auditRequest.Body },
+                        { "ClientCertificate", auditRequest.ClientCertificate },
+                        { "LocalIpAddress", auditRequest.LocalIpAddress },
+                        { "LocalPort", auditRequest.LocalPort },
+                        { "RemoteIpAddress", auditRequest.RemoteIpAddress },
+                        { "RemotePort", auditRequest.RemotePort },
+                        { "RawUrl", auditRequest.RawUrl },
+                        { "RequestNumber", auditRequest.RequestNumber },
+                        { "SessionId", auditRequest.SessionId }
+                    };
+
+                    info.Scopes.Add(scope);
+
+                }
+                else if (state is AuditResponseInfo respAudit)
+                {
+                    
+                    info.Text = formatter(state, exception);
+                    LogScopeInfo scope = new LogScopeInfo
+                    {
+                        Text = $"{respAudit.Id} | {respAudit.StatusCode}-{(HttpStatusCode)respAudit.StatusCode}"
+                    };
+
+                    IDictionary<string, object> dicScope = new Dictionary<string, object>
+                    {
+                        { "Id", respAudit.Id },
+                        { "Date", respAudit.Date },
+                        { "Headers", respAudit.Headers },
+                        { "StatusCode", respAudit.StatusCode },
+                        { "Body", respAudit.Body },
+                        { "Exception", respAudit.Exception },
+                        { "RequestNumber", respAudit.RequestNumber },
+                        { "SessionId", respAudit.SessionId }
+                    };
+
+                    info.Scopes.Add(scope);
+
+                }
                 else if (state is IEnumerable<KeyValuePair<string, object>> properties)
                 {
 
@@ -117,9 +175,6 @@ namespace RSoft.Logs
 
                     _provider.ScopeProvider.ForEachScope((value, loggingProps) =>
                     {
-
-                        if (info.Scopes == null)
-                            info.Scopes = new List<LogScopeInfo>();
 
                         LogScopeInfo scope = new LogScopeInfo();
 

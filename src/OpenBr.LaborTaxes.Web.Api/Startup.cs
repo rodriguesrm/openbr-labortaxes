@@ -7,6 +7,8 @@ using OpenBr.LaborTaxes.Business.Infra.IoC;
 using OpenBr.LaborTaxes.Business.Infra.MongoDb;
 using OpenBr.LaborTaxes.Web.Api.Extensions;
 using OpenBr.LaborTaxes.Web.Api.Filters;
+using RSoft.Logs.Extensions;
+using RSoft.Logs.Middleware;
 using System;
 using System.Text.Json.Serialization;
 
@@ -49,6 +51,7 @@ namespace OpenBr.LaborTaxes.Web.Api
             services.AddApplicationSwagger();
             services.AddApplicationService(Configuration);
             services.AddApplicationHealthChecks(Configuration);
+            services.AddMiddlewareLoggingOption(Configuration);
 
             services
                 .AddControllers(opt => GlobalFilters.Configure(opt))
@@ -84,6 +87,8 @@ namespace OpenBr.LaborTaxes.Web.Api
 
             app.UseStaticFiles();
             app.UseResponseCaching();
+
+            app.UseMiddleware<RequestResponseLogging<Startup>>();
 
             app.UseEndpoints(endpoints =>
             {

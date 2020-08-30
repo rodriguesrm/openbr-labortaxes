@@ -71,11 +71,11 @@ namespace RSoft.Logs.Model
         /// Log statate dictionary
         /// </summary>
         public IDictionary<string, object> StateProperties { get; set; }
-        
+
         /// <summary>
         /// Log scope information list
         /// </summary>
-        public IList<LogScopeInfo> Scopes { get; set; }
+        public IList<LogScopeInfo> Scopes { get; set; } = new List<LogScopeInfo>();
 
     }
 }

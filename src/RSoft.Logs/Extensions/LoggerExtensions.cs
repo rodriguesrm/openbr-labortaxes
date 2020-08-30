@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
@@ -17,9 +18,9 @@ namespace RSoft.Logs.Extensions
     public static class LoggerExtensions
     {
 
-        public static IServiceCollection AddMiddlewareLoggingOption(this IServiceCollection services)
+        public static IServiceCollection AddMiddlewareLoggingOption(this IServiceCollection services, IConfiguration configuration)
         {
-
+            services.Configure<RequestResponseMiddlewareOptions>(options => configuration.GetSection("Logging:RequestResponseMiddleware").Bind(options));
             return services;
         }
 

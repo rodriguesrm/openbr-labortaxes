@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -107,10 +108,30 @@ namespace RSoft.Logs.Middleware
         /// <param name="body"></param>
         private void LogRequest(HttpContext context, string body)
         {
-            body = SecurityApplyBody(context.Request.Method, context.Request.Path, body);
-            _logger.LogInformation(body);
-            //AuditRequestInfo
-            //Terminal.Print(_category.GetType().ToString(), LogLevel.Information, body);
+            if (_options.LogRequest)
+            {
+
+                body = SecurityApplyBody(context.Request.Method, context.Request.Path, body);
+
+                AuditRequestInfo requestInfo = new AuditRequestInfo()
+                {
+                    Id = context.TraceIdentifier,
+                    Scheme = context.Request.Scheme,
+                    Headers = context.Request.Headers.ToDictionary(k => k.Key, v => v.Value.ToString()),
+                    Path = context.Request.Path,
+                    Method = context.Request.Method.ToUpper(),
+                    Host = context.Request.Host.ToString(),
+                    QueryString = context.Request.QueryString.Value,
+                    Body = body,
+                    ClientCertificate = context.Connection.ClientCertificate?.SerialNumber,
+                    LocalIpAddress = context.Connection.LocalIpAddress.ToString(),
+                    LocalPort = context.Connection.LocalPort,
+                    RemoteIpAddress = context.Connection.RemoteIpAddress.ToString(),
+                    RemotePort = context.Connection.RemotePort
+                };
+
+                _logger.Log(LogLevel.Information, default, requestInfo, null, (i, e) => { return $"{requestInfo.Id} | {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
+            }
         }
 
         /// <summary>
@@ -121,9 +142,21 @@ namespace RSoft.Logs.Middleware
         /// <param name="ex">Exception data object</param>
         public void LogResponse(HttpContext context, string body, Exception ex)
         {
-            _logger.LogInformation(ex, body);
-            //AuditRequestInfo
-            //Terminal.Print(_category.GetType().ToString(), LogLevel.Information, body);
+            if (_options.LogResponse)
+            {
+
+                AuditResponseInfo respInfo = new AuditResponseInfo()
+                {
+                    Id = context.TraceIdentifier,
+                    Headers = context.Response.Headers.ToDictionary(k => k.Key, v => v.Value.ToString()),
+                    StatusCode = context.Response.StatusCode,
+                    Body = body,
+                    Exception = ex
+                };
+
+                _logger.Log(LogLevel.Information, default, respInfo, null, (i, e) => { return $"{respInfo.Id} | {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
+
+            }
         }
 
 
@@ -152,6 +185,8 @@ namespace RSoft.Logs.Middleware
             try
             {
 
+                ctx.Response.Body = new MemoryStream();
+
                 await _next.Invoke(ctx);
 
                 string responseText = null;
@@ -163,8 +198,6 @@ namespace RSoft.Logs.Middleware
                     }
                     else
                     {
-
-                        ctx.Response.Body = new MemoryStream();
 
                         if (ctx.Response.ContentType.StartsWith("application/json"))
                         {
