@@ -95,6 +95,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Controllers
         )
         {
             CalculateNetRevenueResult resp = await service.CalculateNetRevenue(request.Type.Value, request.Revenue, request.DependentsNumber, date, cancellationToken);
+            throw new Exception("FAILT TEST");
             if (resp == null)
                 return BadRequest(resp);
             return Ok(resp);

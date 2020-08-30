@@ -7,7 +7,7 @@ namespace RSoft.Logs.Model
     /// <summary>
     /// Request information data
     /// </summary>
-    public class AuditRequestInfo
+    internal class AuditRequestInfo
     {
 
         #region Constructors

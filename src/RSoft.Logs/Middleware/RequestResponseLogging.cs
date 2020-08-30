@@ -151,7 +151,7 @@ namespace RSoft.Logs.Middleware
                     Headers = context.Response.Headers.ToDictionary(k => k.Key, v => v.Value.ToString()),
                     StatusCode = context.Response.StatusCode,
                     Body = body,
-                    Exception = ex
+                    Exception = new LogExceptionInfo(ex)
                 };
 
                 _logger.Log(LogLevel.Information, default, respInfo, null, (i, e) => { return $"{respInfo.Id} | {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });

@@ -121,7 +121,7 @@ namespace RSoft.Logs
                         { "Method", auditRequest.Method },
                         { "Host", auditRequest.Host },
                         { "QueryString", auditRequest.QueryString },
-                        { "Body", auditRequest.Body },
+                        //{ "Body", auditRequest.Body },
                         { "ClientCertificate", auditRequest.ClientCertificate },
                         { "LocalIpAddress", auditRequest.LocalIpAddress },
                         { "LocalPort", auditRequest.LocalPort },
@@ -150,7 +150,7 @@ namespace RSoft.Logs
                         { "Date", respAudit.Date },
                         { "Headers", respAudit.Headers },
                         { "StatusCode", respAudit.StatusCode },
-                        { "Body", respAudit.Body },
+                        //{ "Body", respAudit.Body },
                         { "Exception", respAudit.Exception },
                         { "RequestNumber", respAudit.RequestNumber },
                         { "SessionId", respAudit.SessionId }

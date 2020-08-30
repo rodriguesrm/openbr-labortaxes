@@ -19,7 +19,7 @@ namespace RSoft.Logs.Model
             Message = exception.Message;
             StackTrace = exception.StackTrace;
             Source = exception.Source;
-            Type = exception.GetType();
+            Type = exception.GetType().ToString();
 
             if (exception.InnerException != null)
                 InnerException = new LogExceptionInfo(exception.InnerException);
@@ -33,7 +33,7 @@ namespace RSoft.Logs.Model
         /// <summary>
         /// Exception type
         /// </summary>
-        public Type Type { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets a message that describes the current exception.

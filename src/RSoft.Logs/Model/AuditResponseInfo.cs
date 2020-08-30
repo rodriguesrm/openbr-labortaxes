@@ -7,7 +7,7 @@ namespace RSoft.Logs.Model
     /// <summary>
     /// Audit response information data model
     /// </summary>
-    public class AuditResponseInfo
+    internal class AuditResponseInfo
     {
 
         #region Constructors
@@ -59,7 +59,7 @@ namespace RSoft.Logs.Model
         /// <summary>
         /// Exception data
         /// </summary>
-        public Exception Exception { get; set; }
+        public LogExceptionInfo Exception { get; set; }
 
         #endregion
 
