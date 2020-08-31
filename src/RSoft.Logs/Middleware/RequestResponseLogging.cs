@@ -26,7 +26,6 @@ namespace RSoft.Logs.Middleware
 
         private readonly RequestDelegate _next;
         private readonly RequestResponseMiddlewareOptions _options;
-        private readonly TCategory _category;
         private readonly ILogger<TCategory> _logger;
 
         #endregion
@@ -130,7 +129,7 @@ namespace RSoft.Logs.Middleware
                     RemotePort = context.Connection.RemotePort
                 };
 
-                _logger.Log(LogLevel.Information, default, requestInfo, null, (i, e) => { return $"{requestInfo.Id} | {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
+                _logger.Log(LogLevel.Information, default, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
             }
         }
 
@@ -151,10 +150,10 @@ namespace RSoft.Logs.Middleware
                     Headers = context.Response.Headers.ToDictionary(k => k.Key, v => v.Value.ToString()),
                     StatusCode = context.Response.StatusCode,
                     Body = body,
-                    Exception = new LogExceptionInfo(ex)
+                    Exception = ex != null ? new LogExceptionInfo(ex) : null
                 };
 
-                _logger.Log(LogLevel.Information, default, respInfo, null, (i, e) => { return $"{respInfo.Id} | {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
+                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, default, respInfo, null, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
 
             }
         }

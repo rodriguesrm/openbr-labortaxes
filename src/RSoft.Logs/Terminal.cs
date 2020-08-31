@@ -238,6 +238,15 @@ namespace RSoft.Logs
 
             // Category / Date
             Console.ResetColor();
+            if (level == LogLevel.Error || level == LogLevel.Critical)
+            {
+                Console.ForegroundColor = messageForegroundColor;
+                Console.BackgroundColor = messageBackgroundColor;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+            }
             string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} | ";
             if (!printDate)
                 date = string.Empty;

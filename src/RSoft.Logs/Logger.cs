@@ -106,6 +106,8 @@ namespace RSoft.Logs
                 {
 
                     info.Text = formatter(state, exception);
+                    if (auditRequest.Body != null && info.Text.Contains(auditRequest.Body))
+                        auditRequest.Body = null;
                     LogScopeInfo scope = new LogScopeInfo
                     {
                         Text = $"{auditRequest.Id} | {auditRequest.Method} {auditRequest.RawUrl}"
@@ -121,7 +123,6 @@ namespace RSoft.Logs
                         { "Method", auditRequest.Method },
                         { "Host", auditRequest.Host },
                         { "QueryString", auditRequest.QueryString },
-                        //{ "Body", auditRequest.Body },
                         { "ClientCertificate", auditRequest.ClientCertificate },
                         { "LocalIpAddress", auditRequest.LocalIpAddress },
                         { "LocalPort", auditRequest.LocalPort },
@@ -135,25 +136,26 @@ namespace RSoft.Logs
                     info.Scopes.Add(scope);
 
                 }
-                else if (state is AuditResponseInfo respAudit)
+                else if (state is AuditResponseInfo auditResponse)
                 {
                     
                     info.Text = formatter(state, exception);
+                    if (auditResponse.Body != null && info.Text.Contains(auditResponse.Body))
+                        auditResponse.Body = null;
                     LogScopeInfo scope = new LogScopeInfo
                     {
-                        Text = $"{respAudit.Id} | {respAudit.StatusCode}-{(HttpStatusCode)respAudit.StatusCode}"
+                        Text = $"{auditResponse.Id} | {auditResponse.StatusCode}-{(HttpStatusCode)auditResponse.StatusCode}"
                     };
 
                     IDictionary<string, object> dicScope = new Dictionary<string, object>
                     {
-                        { "Id", respAudit.Id },
-                        { "Date", respAudit.Date },
-                        { "Headers", respAudit.Headers },
-                        { "StatusCode", respAudit.StatusCode },
-                        //{ "Body", respAudit.Body },
-                        { "Exception", respAudit.Exception },
-                        { "RequestNumber", respAudit.RequestNumber },
-                        { "SessionId", respAudit.SessionId }
+                        { "Id", auditResponse.Id },
+                        { "Date", auditResponse.Date },
+                        { "Headers", auditResponse.Headers },
+                        { "StatusCode", auditResponse.StatusCode },
+                        { "Exception", auditResponse.Exception },
+                        { "RequestNumber", auditResponse.RequestNumber },
+                        { "SessionId", auditResponse.SessionId }
                     };
 
                     info.Scopes.Add(scope);
