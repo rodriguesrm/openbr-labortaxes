@@ -27,6 +27,7 @@ namespace RSoft.Logs.Middleware
         private readonly RequestDelegate _next;
         private readonly RequestResponseMiddlewareOptions _options;
         private readonly ILogger<TCategory> _logger;
+        private readonly EventId _eventId = new EventId(1001, "RSoft.Logs.Middleware");
 
         #endregion
 
@@ -129,7 +130,7 @@ namespace RSoft.Logs.Middleware
                     RemotePort = context.Connection.RemotePort
                 };
 
-                _logger.Log(LogLevel.Information, default, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
+                _logger.Log(LogLevel.Information, _eventId, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
             }
         }
 
@@ -153,7 +154,7 @@ namespace RSoft.Logs.Middleware
                     Exception = ex != null ? new LogExceptionInfo(ex) : null
                 };
 
-                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, default, respInfo, null, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
+                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, null, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
 
             }
         }

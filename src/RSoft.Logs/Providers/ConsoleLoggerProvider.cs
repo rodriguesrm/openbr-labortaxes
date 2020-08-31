@@ -52,12 +52,10 @@ namespace RSoft.Logs.Providers
 
         protected override void WriteLogAction(LogEntry info)
         {
-            //if (info.EventId.Id == -200)
-            //    return;
             bool printDate = true;
             if (info.Category == "Microsoft.Hosting.Lifetime")
                 printDate = false;
-            Terminal.Print(info.Category, info.Level, info.Text, printDate, info.Exception);
+            Terminal.Print(info.Category, info.Level, info.EventId, info.Text, printDate, info.Exception);
         }
 
         #endregion

@@ -206,6 +206,8 @@ namespace RSoft.Logs
                     break;
 
                 case LogLevel.Information:
+                    if (eventId.Id == 1001 && eventId.Name == "RSoft.Logs.Middleware")
+                        messageForegroundColor = ConsoleColor.White;
                     levelForegroundColor = ConsoleColor.Green;
                     break;
 
@@ -242,10 +244,6 @@ namespace RSoft.Logs
             {
                 Console.ForegroundColor = messageForegroundColor;
                 Console.BackgroundColor = messageBackgroundColor;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
             }
             string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} | ";
             if (!printDate)
