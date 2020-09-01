@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DnsClient.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OpenBr.LaborTaxes.Business.Model;
 using OpenBr.LaborTaxes.Business.Services;
 using OpenBr.LaborTaxes.Web.Api.Models;
@@ -21,6 +23,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Controllers
         /// <summary>
         /// Calculate inss rate and values
         /// </summary>
+        /// <param name="logger">Logger provider object</param>
         /// <param name="service">Labor taxes service object</param>
         /// <param name="request">Request data</param>
         /// <param name="date">Reference date for calculate</param>
@@ -32,6 +35,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Controllers
         [ProducesResponseType(typeof(ValidationModelResult), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CalculateInss
         (
+            [FromServices] ILogger<LaborTaxesController> logger,
             [FromServices] ILaborTaxesService service,
             [FromBody] CalculateInssRequest request,
             [FromQuery] DateTime? date,
