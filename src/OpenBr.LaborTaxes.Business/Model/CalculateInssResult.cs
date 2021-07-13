@@ -1,4 +1,6 @@
-﻿namespace OpenBr.LaborTaxes.Business.Model
+﻿using System;
+
+namespace OpenBr.LaborTaxes.Business.Model
 {
 
     /// <summary>
