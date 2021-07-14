@@ -10,13 +10,13 @@ using InssBusinessType = OpenBr.LaborTaxes.Business.Enums.InssType;
 
 namespace OpenBr.LaborTaxes.Grpc.Host.Services
 {
-    public class LaborTaxesService : Contract.LaborTaxes.LaborTaxesBase
+    public class LaborTaxesGrpcService : Contract.LaborTaxes.LaborTaxesBase
     {
 
         #region Local objects/variables
 
         private readonly ILaborTaxesService _laborTaxesService;
-        private readonly ILogger<LaborTaxesService> _logger;
+        private readonly ILogger<LaborTaxesGrpcService> _logger;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
         /// </summary>
         /// <param name="laborTaxesService">ILaborTaxesService bussiness service </param>
         /// <param name="logger">Logger object instance</param>
-        public LaborTaxesService(ILaborTaxesService laborTaxesService, ILogger<LaborTaxesService> logger) : base()
+        public LaborTaxesGrpcService(ILaborTaxesService laborTaxesService, ILogger<LaborTaxesGrpcService> logger) : base()
         {
             _laborTaxesService = laborTaxesService;
             _logger = logger;
@@ -65,7 +65,15 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
             {
                 CalculateInssResult resp = await _laborTaxesService.CalculateInss(inssType, revenue, date, default);
 
-                reply = resp.MapResult();
+                if (resp == null)
+                {
+                    reply.Success = false;
+                    reply.Errors = $"404-Inss table {(date.HasValue ? $"for date {date.Value.ToShortDateString()} " : string.Empty)}not found!";
+                }
+                else
+                {
+                    reply = resp.MapResult();
+                }
                 
                 _logger.LogInformation("gRPC LaborTaxesService CalculateInss - END");
 
@@ -74,7 +82,7 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
             {
                 _logger.LogError(ex, "gRPC LaborTaxesService CalculateInss - FAIL");
                 reply.Success = false;
-                reply.Errors = $"gRPC LaborTaxesService CalculateInss - FAIL - {ex.Message}";
+                reply.Errors = ex.Message;
             }
 
             return reply;

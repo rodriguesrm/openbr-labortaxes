@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using OpenBr.LaborTaxes.Business.Documents;
+﻿using OpenBr.LaborTaxes.Business.Documents;
 using OpenBr.LaborTaxes.Business.Enums;
 using OpenBr.LaborTaxes.Business.Model;
 using OpenBr.LaborTaxes.Business.Repositories;

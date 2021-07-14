@@ -18,6 +18,24 @@ enum InssType {
     managing_partner = 2;
 }
 
+message InssReply {
+	double rate = 1;
+	double amount = 2;
+	bool is_limit = 3;
+}
+
+message NetRevenueReply {
+	InssReply inss = 1;
+	IrpfReply irpf = 2;
+}
+
+message IrpfReply {
+	double calculation_basis = 1;
+	double rate = 2;
+	double amount = 3;
+	double dependents_deduction_amount = 4;
+}
+
 // message contracts
 message CalculateInssRequest {
 	InssType inss_type = 1;
@@ -26,10 +44,8 @@ message CalculateInssRequest {
 }
 message CalculateInssReply {
 	bool success = 1;
-	double rate = 2;
-	double amount = 3;
-	bool is_limit = 4;
-	string errors = 5;
+	InssReply data = 2;
+	string errors = 3;
 }
 
 message CalculateIrpfRequest {
@@ -39,11 +55,8 @@ message CalculateIrpfRequest {
 }
 message CalculateIrpfReply {
 	bool success = 1;
-	double calculation_basis = 2;
-	double rate = 3;
-	double amount = 4;
-	double dependents_deduction_amount = 5;
-	string errors = 6;
+	IrpfReply data = 2;
+	string errors = 3;
 }
 
 message CalculateNetRevenueRequest {
@@ -52,8 +65,7 @@ message CalculateNetRevenueRequest {
 	int32 dependents_number = 3;
 }
 message CalculateNetRevenueReply {
-	CalculateInssReply inss = 1;
-	CalculateIrpfReply irpf = 2;
-	double net_revenue = 3;
-	string errors = 4;
+	bool success = 1;
+	NetRevenueReply data = 2;
+	string errors = 3;
 }

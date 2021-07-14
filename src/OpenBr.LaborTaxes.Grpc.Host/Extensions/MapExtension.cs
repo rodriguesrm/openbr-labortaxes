@@ -18,9 +18,12 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Extensions
             =>  new()
                 {
                     Success = true,
-                    Rate = (double)result.Rate,
-                    Amount = (double)result.Amount,
-                    IsLimit = result.IsLimit
+                    Data = new InssReply()
+                    {
+                        Rate = (double)result.Rate,
+                        Amount = (double)result.Amount,
+                        IsLimit = result.IsLimit
+                    }
                 };
 
     }
