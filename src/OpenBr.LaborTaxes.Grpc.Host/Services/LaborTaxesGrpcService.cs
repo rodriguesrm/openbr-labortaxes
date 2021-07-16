@@ -7,6 +7,7 @@ using OpenBr.LaborTaxes.Grpc.Host.Extensions;
 using System;
 using System.Threading.Tasks;
 using InssBusinessType = OpenBr.LaborTaxes.Business.Enums.InssType;
+using RSoft.Logs.Extensions;
 
 namespace OpenBr.LaborTaxes.Grpc.Host.Services
 {
@@ -17,7 +18,6 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
 
         private readonly ILaborTaxesService _laborTaxesService;
         private readonly ILogger<LaborTaxesGrpcService> _logger;
-
         #endregion
 
         #region Constructors
@@ -45,7 +45,8 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
         public override async Task<CalculateInssReply> CalculateInss(CalculateInssRequest request, ServerCallContext context)
         {
 
-            _logger.LogInformation("gRPC LaborTaxesService CalculateInss - START", request);
+            _logger.LogInformation("gRPC LaborTaxesService CalculateInss - START");
+            _logger.LogInformation("Request: {Request}", request.AsJson());
 
             InssBusinessType inssType = request.InssType switch
             {
@@ -54,7 +55,6 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
                 InssType.ManagingPartner => InssBusinessType.ManagingPartner,
                 _ => InssBusinessType.Individual,
             };
-            decimal revenue = (decimal)request.Revenue;
             
             DateTime? date = null;
             if (DateTime.TryParse(request.ReferenceDate, out DateTime dateParsed))
@@ -63,24 +63,28 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
             CalculateInssReply reply = new();
             try
             {
+
+                decimal revenue = (decimal)request.Revenue;
+
                 CalculateInssResult resp = await _laborTaxesService.CalculateInss(inssType, revenue, date, default);
 
                 if (resp == null)
                 {
                     reply.Success = false;
-                    reply.Errors = $"404-Inss table {(date.HasValue ? $"for date {date.Value.ToShortDateString()} " : string.Empty)}not found!";
+                    reply.Errors = $"400-Bad Request!";
                 }
                 else
                 {
                     reply = resp.MapResult();
                 }
                 
+                _logger.LogInformation("Response: {Response}", reply.AsJson());
                 _logger.LogInformation("gRPC LaborTaxesService CalculateInss - END");
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "gRPC LaborTaxesService CalculateInss - FAIL");
+                _logger.LogError(ex, ex.Message);
                 reply.Success = false;
                 reply.Errors = ex.Message;
             }
@@ -93,14 +97,49 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
         /// </summary>
         /// <param name="request">Request data</param>
         /// <param name="context">Reply data</param>
-        public override Task<CalculateIrpfReply> CalculateIrpf(CalculateIrpfRequest request, ServerCallContext context)
+        public override async Task<CalculateIrpfReply> CalculateIrpf(CalculateIrpfRequest request, ServerCallContext context)
         {
 
-            _logger.LogInformation("gRPC LaborTaxesService CalculateIrpf - START", request);
+            _logger.LogInformation("gRPC LaborTaxesService CalculateIrpf - START");
+            _logger.LogInformation("Request: {Request}", request.AsJson());
 
-            _logger.LogInformation("gRPC LaborTaxesService CalculateIrpf - END");
+            DateTime? date = null;
+            if (DateTime.TryParse(request.ReferenceDate, out DateTime dateParsed))
+                date = dateParsed;
 
-            return base.CalculateIrpf(request, context);
+            CalculateIrpfReply reply = new();
+            try
+            {
+
+                decimal revenue = (decimal)request.Revenue;
+                decimal inssValue = (decimal)request.InssValue;
+                byte dependentsNumber = (byte)request.DependentsNumber;
+
+                CalculateIrpfResult resp = await _laborTaxesService.CalculateIrpf(revenue, inssValue, dependentsNumber, date);
+
+                if (resp == null)
+                {
+                    reply.Success = false;
+                    reply.Errors = $"400-Bad Request!";
+                }
+                else
+                {
+                    reply = resp.MapResult();
+                }
+
+                _logger.LogInformation("Response: {Response}", reply.AsJson());
+                _logger.LogInformation("gRPC LaborTaxesService CalculateIrpf - END");
+
+            }
+            catch (Exception ex)
+            {   
+                _logger.LogError(ex, ex.Message);
+                reply.Success = false;
+                reply.Errors = ex.Message;
+            }
+
+            return reply;
+
         }
 
         /// <summary>
@@ -108,14 +147,55 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
         /// </summary>
         /// <param name="request">Request data</param>
         /// <param name="context">Reply data</param>
-        public override Task<CalculateNetRevenueReply> CalculateNetRevenue(CalculateNetRevenueRequest request, ServerCallContext context)
+        public override async Task<CalculateNetRevenueReply> CalculateNetRevenue(CalculateNetRevenueRequest request, ServerCallContext context)
         {
 
-            _logger.LogInformation("gRPC LaborTaxesService CalculateNetRevenue - START", request);
+            _logger.LogInformation("gRPC LaborTaxesService CalculateNetRevenue - START");
+            _logger.LogInformation("Request: {Request}", request.AsJson());
 
+            InssBusinessType inssType = request.InssType switch
+            {
+                InssType.Worker => InssBusinessType.Worker,
+                InssType.Individual => InssBusinessType.Individual,
+                InssType.ManagingPartner => InssBusinessType.ManagingPartner,
+                _ => InssBusinessType.Individual,
+            };
+
+            DateTime? date = null;
+            if (DateTime.TryParse(request.ReferenceDate, out DateTime dateParsed))
+                date = dateParsed;
+
+            CalculateNetRevenueReply reply = new();
+            try
+            {
+
+                decimal revenue = (decimal)request.Revenue;
+                byte dependentsNumber = (byte)request.DependentsNumber;
+
+                CalculateNetRevenueResult resp = await _laborTaxesService.CalculateNetRevenue(inssType, revenue, dependentsNumber, date, default);
+                if (resp == null)
+                {
+                    reply.Success = false;
+                    reply.Errors = $"400-Bad Request!";
+                }
+                else
+                {
+                    reply = resp.MapResult();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                reply.Success = false;
+                reply.Errors = ex.Message;
+            }
+
+            _logger.LogInformation("Response: {Response}", reply.AsJson());
             _logger.LogInformation("gRPC LaborTaxesService CalculateNetRevenue - END");
 
-            return base.CalculateNetRevenue(request, context);
+            return reply;
+
         }
 
         #endregion

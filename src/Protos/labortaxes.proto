@@ -52,6 +52,7 @@ message CalculateIrpfRequest {
 	double revenue = 1;
 	double inss_value = 2;
 	int32 dependents_number = 3;
+	string reference_date = 4;
 }
 message CalculateIrpfReply {
 	bool success = 1;
@@ -63,6 +64,7 @@ message CalculateNetRevenueRequest {
 	InssType inss_type = 1;
 	double revenue = 2;
 	int32 dependents_number = 3;
+	string reference_date = 4;
 }
 message CalculateNetRevenueReply {
 	bool success = 1;

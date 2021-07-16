@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2_Rest", "2_Rest", "{D30509
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_gRpc", "3_gRpc", "{B41AC441-6744-41F7-BAAD-FE0DD6D81270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBr.LaborTaxes.Contract", "OpenBr.LaborTaxes.Contract\OpenBr.LaborTaxes.Contract.csproj", "{F796015A-0800-4FB1-9DB4-F7E7B1A0EA8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Contract", "OpenBr.LaborTaxes.Contract\OpenBr.LaborTaxes.Contract.csproj", "{F796015A-0800-4FB1-9DB4-F7E7B1A0EA8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBr.LaborTaxes.Grpc.Host", "OpenBr.LaborTaxes.Grpc.Host\OpenBr.LaborTaxes.Grpc.Host.csproj", "{7AE4742A-7AC6-473F-BDBA-5DF6EAD15964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Grpc.Host", "OpenBr.LaborTaxes.Grpc.Host\OpenBr.LaborTaxes.Grpc.Host.csproj", "{7AE4742A-7AC6-473F-BDBA-5DF6EAD15964}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
