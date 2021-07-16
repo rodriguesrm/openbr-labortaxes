@@ -61,7 +61,8 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Extensions
                         Rate = (double)result.Irpf.Rate,
                         Amount = (double)result.Irpf.Amount,
                         DependentsDeductionAmount = (double)result.Irpf.DependentsDeductionAmount
-                    }
+                    },
+                    NetrevenueAmount = (double)result.NetRevenue
                 }
             };
 

@@ -35,6 +35,25 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
 
         #endregion
 
+        #region Local methods
+
+        /// <summary>
+        /// Convert grpc inss type to enum inss type
+        /// </summary>
+        /// <param name="inssType">Grpc inss request type</param>
+        private static InssBusinessType ConvertInssType(InssType inssType)
+        {
+            return inssType switch
+            {
+                InssType.Worker => InssBusinessType.Worker,
+                InssType.Individual => InssBusinessType.Individual,
+                InssType.ManagingPartner => InssBusinessType.ManagingPartner,
+                _ => InssBusinessType.Individual,
+            };
+        }
+
+        #endregion
+
         #region Overrides
 
         /// <summary>
@@ -48,14 +67,8 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
             _logger.LogInformation("gRPC LaborTaxesService CalculateInss - START");
             _logger.LogInformation("Request: {Request}", request.AsJson());
 
-            InssBusinessType inssType = request.InssType switch
-            {
-                InssType.Worker => InssBusinessType.Worker,
-                InssType.Individual => InssBusinessType.Individual,
-                InssType.ManagingPartner => InssBusinessType.ManagingPartner,
-                _ => InssBusinessType.Individual,
-            };
-            
+            InssBusinessType inssType = ConvertInssType(request.InssType);
+
             DateTime? date = null;
             if (DateTime.TryParse(request.ReferenceDate, out DateTime dateParsed))
                 date = dateParsed;
@@ -152,14 +165,8 @@ namespace OpenBr.LaborTaxes.Grpc.Host.Services
 
             _logger.LogInformation("gRPC LaborTaxesService CalculateNetRevenue - START");
             _logger.LogInformation("Request: {Request}", request.AsJson());
-
-            InssBusinessType inssType = request.InssType switch
-            {
-                InssType.Worker => InssBusinessType.Worker,
-                InssType.Individual => InssBusinessType.Individual,
-                InssType.ManagingPartner => InssBusinessType.ManagingPartner,
-                _ => InssBusinessType.Individual,
-            };
+            
+            InssBusinessType inssType = ConvertInssType(request.InssType);
 
             DateTime? date = null;
             if (DateTime.TryParse(request.ReferenceDate, out DateTime dateParsed))

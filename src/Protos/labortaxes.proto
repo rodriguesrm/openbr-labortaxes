@@ -27,6 +27,7 @@ message InssReply {
 message NetRevenueReply {
 	InssReply inss = 1;
 	IrpfReply irpf = 2;
+	double netrevenue_amount = 3;
 }
 
 message IrpfReply {
