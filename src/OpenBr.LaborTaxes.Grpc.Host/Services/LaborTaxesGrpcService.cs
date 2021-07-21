@@ -1,13 +1,13 @@
 ﻿using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using OpenBr.LaborTaxes.Business.Model;
 using OpenBr.LaborTaxes.Business.Services;
 using OpenBr.LaborTaxes.Contract;
 using OpenBr.LaborTaxes.Grpc.Host.Extensions;
 using System;
 using System.Threading.Tasks;
-using InssBusinessType = OpenBr.LaborTaxes.Business.Enums.InssType;
+using InssBusinessType = OpenBr.LaborTaxes.Contract.Enums.InssType;
 using RSoft.Logs.Extensions;
+using OpenBr.LaborTaxes.Contract.Model;
 
 namespace OpenBr.LaborTaxes.Grpc.Host.Services
 {

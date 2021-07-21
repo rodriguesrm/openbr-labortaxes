@@ -1,4 +1,4 @@
-﻿using OpenBr.LaborTaxes.Business.Enums;
+﻿using OpenBr.LaborTaxes.Contract.Enums;
 using System;
 using System.Collections.Generic;
 

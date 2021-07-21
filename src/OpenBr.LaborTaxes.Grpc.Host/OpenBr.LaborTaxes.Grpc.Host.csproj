@@ -15,7 +15,6 @@
 			<Link>Protos</Link>
 		</None>
 		<ProjectReference Include="..\OpenBr.LaborTaxes.Business\OpenBr.LaborTaxes.Business.csproj" />
-		<ProjectReference Include="..\OpenBr.LaborTaxes.Contract\OpenBr.LaborTaxes.Contract.csproj" />
 		<Protobuf Include="..\Protos\labortaxes.proto">
 			<Link>Protos\labortaxes.proto</Link>
 		</Protobuf>

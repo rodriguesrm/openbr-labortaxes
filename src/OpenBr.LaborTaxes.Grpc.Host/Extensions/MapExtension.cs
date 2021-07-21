@@ -1,5 +1,5 @@
-﻿using OpenBr.LaborTaxes.Business.Model;
-using OpenBr.LaborTaxes.Contract;
+﻿using OpenBr.LaborTaxes.Contract;
+using OpenBr.LaborTaxes.Contract.Model;
 
 namespace OpenBr.LaborTaxes.Grpc.Host.Extensions
 {

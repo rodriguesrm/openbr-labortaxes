@@ -1,7 +1,7 @@
 ﻿using OpenBr.LaborTaxes.Business.Documents;
-using OpenBr.LaborTaxes.Business.Enums;
-using OpenBr.LaborTaxes.Business.Model;
 using OpenBr.LaborTaxes.Business.Repositories;
+using OpenBr.LaborTaxes.Contract.Enums;
+using OpenBr.LaborTaxes.Contract.Model;
 using System;
 using System.Linq;
 using System.Threading;
