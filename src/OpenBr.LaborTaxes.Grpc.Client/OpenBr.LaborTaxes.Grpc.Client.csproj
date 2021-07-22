@@ -25,10 +25,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Extensions\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\OpenBr.LaborTaxes.Contract\OpenBr.LaborTaxes.Contract.csproj" />
 	</ItemGroup>
 

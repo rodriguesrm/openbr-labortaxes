@@ -18,7 +18,7 @@ namespace OpenBr.LaborTaxes.Grpc.Client
     /// <summary>
     /// OpenBr gRpc Labor Taxes provider
     /// </summary>
-    public class GrpcLaborTaxesProvider
+    public class GrpcLaborTaxesProvider : IGrpcLaborTaxesProvider
     {
 
         #region Local Variables/Objects
@@ -123,10 +123,7 @@ namespace OpenBr.LaborTaxes.Grpc.Client
 
         #region Public methods
 
-        /// <summary>
-        /// Call calculate-inss methods
-        /// </summary>
-        /// <param name="args">Arguments object instance</param>
+        ///<inheritdoc/>
         public Task<CalculateBaseResult<CalculateInssResult>> CalculateInss(CalculateInssArgs args)
         {
 
@@ -167,7 +164,7 @@ namespace OpenBr.LaborTaxes.Grpc.Client
                 {
                     result.Data = null;
                     result.Errors = reply.Errors;
-                    _logger?.LogInformation("SendMail FAIL, {Errors}", result.Errors);
+                    _logger?.LogInformation("CalculateInss FAIL, {Errors}", result.Errors);
                 }
 
             }
@@ -175,10 +172,134 @@ namespace OpenBr.LaborTaxes.Grpc.Client
             {
                 result.Success = false;
                 result.Errors = ex.Message;
-                _logger?.LogInformation("SendMail FAIL, {Message}", ex.Message);
+                _logger?.LogInformation("CalculateInss FAIL, {Message}", ex.Message);
             }
 
             return Task.FromResult(result);
+
+        }
+
+        ///<inheritdoc/>
+        public Task<CalculateBaseResult<CalculateIrpfResult>> CalculateIrpf(CalculateIrpfArgs args)
+        {
+
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+
+            if (string.IsNullOrWhiteSpace(_url))
+                throw new InvalidOperationException($"The service url '{_url} is null or empty!");
+
+            _logger?.LogInformation("Process CalculateIrpf command");
+
+            using GrpcChannel channel = CreateAuthenticatedChannel(_url);
+            LaborTaxesClient client = new LaborTaxesClient(channel);
+
+            CalculateBaseResult<CalculateIrpfResult> result = new CalculateBaseResult<CalculateIrpfResult>();
+            try
+            {
+                CalculateIrpfRequest request = new CalculateIrpfRequest()
+                {
+                    InssValue = (double)args.InssValue,
+                    Revenue = (double)args.Revenue,
+                    DependentsNumber = args.DependentsNumber,
+                    ReferenceDate = args.ReferenceDate?.ToString("yyyy-MM-dd") ?? string.Empty
+                };
+
+                CalculateIrpfReply reply = client.CalculateIrpf(request);
+                result.Success = reply.Success;
+                if (reply.Success)
+                {
+                    result.Data = new CalculateIrpfResult()
+                    {
+                        CalculationBasis = (decimal)reply.Data.CalculationBasis,
+                        Amount = (decimal)reply.Data.Amount,
+                        Rate = (decimal)reply.Data.Rate
+                    };
+                    _logger?.LogInformation("CalculateIrpf Success");
+                }
+                else
+                {
+                    result.Data = null;
+                    result.Errors = reply.Errors;
+                    _logger?.LogInformation("CalculateIrpf FAIL, {Errors}", result.Errors);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Errors = ex.Message;
+                _logger?.LogInformation("CalculateIrpf FAIL, {Message}", ex.Message);
+            }
+
+            return Task.FromResult(result);
+
+        }
+
+        ///<inheritdoc/>
+        public Task<CalculateBaseResult<CalculateNetRevenueResult>> CalculateNetRevenue(CalculateNetRevenueArgs args)
+        {
+
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+
+            if (string.IsNullOrWhiteSpace(_url))
+                throw new InvalidOperationException($"The service url '{_url} is null or empty!");
+
+            _logger?.LogInformation("Process CalculateIrpf command");
+
+            using GrpcChannel channel = CreateAuthenticatedChannel(_url);
+            LaborTaxesClient client = new LaborTaxesClient(channel);
+
+            CalculateBaseResult<CalculateNetRevenueResult> result = new CalculateBaseResult<CalculateNetRevenueResult>();
+            try
+            {
+                CalculateNetRevenueRequest request = new CalculateNetRevenueRequest()
+                {
+                    InssType = MapInssType(args.InssType),
+                    Revenue = (double)args.Revenue,
+                    DependentsNumber = args.DependentsNumber,
+                    ReferenceDate = args.ReferenceDate?.ToString("yyyy-MM-dd") ?? string.Empty
+                };
+
+                CalculateNetRevenueReply reply = client.CalculateNetRevenue(request);
+                result.Success = reply.Success;
+                if (reply.Success)
+                {
+                    result.Data = new CalculateNetRevenueResult()
+                    {
+                        Inss = new CalculateInssResult()
+                        {
+                            Rate = (decimal)reply.Data.Inss.Rate,
+                            Amount = (decimal)reply.Data.Inss.Amount,
+                            IsLimit = reply.Data.Inss.IsLimit
+                        },
+                        Irpf = new CalculateIrpfResult()
+                        {
+                            CalculationBasis = (decimal)reply.Data.Irpf.CalculationBasis,
+                            Amount = (decimal)reply.Data.Irpf.Amount,
+                            Rate = (decimal)reply.Data.Irpf.Rate
+                        }
+                    };
+                    _logger?.LogInformation("CalculateIrpf Success");
+                }
+                else
+                {
+                    result.Data = null;
+                    result.Errors = reply.Errors;
+                    _logger?.LogInformation("CalculateIrpf FAIL, {Errors}", result.Errors);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Errors = ex.Message;
+                _logger?.LogInformation("CalculateIrpf FAIL, {Message}", ex.Message);
+            }
+
+            return Task.FromResult(result);
+
         }
 
         #endregion
