@@ -6,9 +6,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:5000;https://localhost:5001"
+      "applicationUrl": "http://localhost:5022;https://localhost:5021"
     },
-    "Docker": {
+    "Docker": { 
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "publishAllPorts": true,
