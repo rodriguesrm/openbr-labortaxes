@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Grpc.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Contract", "OpenBr.LaborTaxes.Contract\OpenBr.LaborTaxes.Contract.csproj", "{F96ABF84-2116-4611-8D64-17C21E85713D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBr.LaborTaxes.Grpc.ConsoleTest", "OpenBr.LaborTaxes.Grpc.ConsoleTest\OpenBr.LaborTaxes.Grpc.ConsoleTest.csproj", "{B43C7F33-9E5F-4307-95D9-FC873A1F98FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBr.LaborTaxes.Grpc.ConsoleTest", "OpenBr.LaborTaxes.Grpc.ConsoleTest\OpenBr.LaborTaxes.Grpc.ConsoleTest.csproj", "{B43C7F33-9E5F-4307-95D9-FC873A1F98FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
