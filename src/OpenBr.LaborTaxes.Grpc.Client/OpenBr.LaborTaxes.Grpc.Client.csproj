@@ -9,6 +9,7 @@
     <PackageTags>labor taxes client grpc rpc</PackageTags>
     <RepositoryUrl>https://github.com/rodriguesrm/openbr-labortaxes</RepositoryUrl>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 	<ItemGroup>
