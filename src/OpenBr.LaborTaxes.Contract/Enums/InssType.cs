@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace OpenBr.LaborTaxes.Business.Enums
+namespace OpenBr.LaborTaxes.Contract.Enums
 {
 
     /// <summary>

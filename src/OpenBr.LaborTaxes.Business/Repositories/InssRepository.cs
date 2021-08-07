@@ -2,10 +2,10 @@
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using OpenBr.LaborTaxes.Business.Documents;
-using OpenBr.LaborTaxes.Business.Enums;
 using OpenBr.LaborTaxes.Business.Helpers;
 using OpenBr.LaborTaxes.Business.Infra;
 using OpenBr.LaborTaxes.Business.Infra.MongoDb;
+using OpenBr.LaborTaxes.Contract.Enums;
 using System;
 using System.IO;
 using System.Text.Json;

@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+// import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "OpenBr.LaborTaxes.Contract";
+
+// service definitions
+service LaborTaxes {
+	rpc CalculateInss (CalculateInssRequest) returns (CalculateInssReply);
+	rpc CalculateIrpf (CalculateIrpfRequest) returns (CalculateIrpfReply);
+	rpc CalculateNetRevenue (CalculateNetRevenueRequest) returns (CalculateNetRevenueReply);
+}
+
+// enum types
+enum InssType {
+    worker = 0;
+    individual = 1;
+    managing_partner = 2;
+}
+
+message InssReply {
+	double rate = 1;
+	double amount = 2;
+	bool is_limit = 3;
+}
+
+message NetRevenueReply {
+	InssReply inss = 1;
+	IrpfReply irpf = 2;
+	double netrevenue_amount = 3;
+}
+
+message IrpfReply {
+	double calculation_basis = 1;
+	double rate = 2;
+	double amount = 3;
+	double dependents_deduction_amount = 4;
+}
+
+// message contracts
+message CalculateInssRequest {
+	InssType inss_type = 1;
+	double revenue = 2;
+	string reference_date = 3;
+}
+message CalculateInssReply {
+	bool success = 1;
+	InssReply data = 2;
+	string errors = 3;
+}
+
+message CalculateIrpfRequest {
+	double revenue = 1;
+	double inss_value = 2;
+	int32 dependents_number = 3;
+	string reference_date = 4;
+}
+message CalculateIrpfReply {
+	bool success = 1;
+	IrpfReply data = 2;
+	string errors = 3;
+}
+
+message CalculateNetRevenueRequest {
+	InssType inss_type = 1;
+	double revenue = 2;
+	int32 dependents_number = 3;
+	string reference_date = 4;
+}
+message CalculateNetRevenueReply {
+	bool success = 1;
+	NetRevenueReply data = 2;
+	string errors = 3;
+}

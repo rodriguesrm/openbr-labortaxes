@@ -1,4 +1,4 @@
-﻿using OpenBr.LaborTaxes.Business.Enums;
+﻿using OpenBr.LaborTaxes.Contract.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace OpenBr.LaborTaxes.Web.Api.Models

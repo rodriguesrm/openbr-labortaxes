@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>18f7e2d3-7175-474f-baf4-dc2d4ba640fc</UserSecretsId>
+		<Version>1.1.0</Version>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+		<PackageReference Include="RSoft.Logs" Version="1.1.0-rc1.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\Protos">
+			<Link>Protos</Link>
+		</None>
+		<ProjectReference Include="..\OpenBr.LaborTaxes.Business\OpenBr.LaborTaxes.Business.csproj" />
+		<Protobuf Include="..\Protos\labortaxes.proto">
+			<Link>Protos\labortaxes.proto</Link>
+		</Protobuf>
+	</ItemGroup>
+
+</Project>

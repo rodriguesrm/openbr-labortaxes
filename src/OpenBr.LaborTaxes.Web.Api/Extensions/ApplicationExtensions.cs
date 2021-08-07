@@ -1,5 +1,4 @@
-﻿using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -105,8 +104,7 @@ namespace OpenBr.LaborTaxes.Web.Api.Extensions
             app
                 .UseHealthChecks("/hc", new HealthCheckOptions
                 {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    Predicate = _ => true
                 });
 
 
