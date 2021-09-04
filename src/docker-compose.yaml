@@ -16,6 +16,22 @@ services:
       - "mongoBrLaborTaxes"
     networks: 
       - net-br-labortaxes
+
+  br-labortaxes-grpc:
+    container_name: br-labortaxes-grpc
+    build:
+      context: .
+      dockerfile: OpenBr.LaborTaxes.Grpc.Host/Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+    environment:
+      - ConnectionStrings:MongoDb=mongodb://admin:admin@mongoBrLaborTaxes:27017/labortaxes?authSource=admin&readPreference=primary&ssl=false
+        #- HealthChecksUI:HealthChecks:0:Uri=http://localhost/selfcheck
+    depends_on:
+      - "mongoBrLaborTaxes"
+    networks:
+      - net-br-labortaxes
       
   mongoBrLaborTaxes:
     container_name: mongoBrLaborTaxes

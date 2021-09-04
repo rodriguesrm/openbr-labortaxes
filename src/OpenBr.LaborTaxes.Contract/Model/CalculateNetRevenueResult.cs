@@ -1,4 +1,4 @@
-﻿namespace OpenBr.LaborTaxes.Business.Model
+﻿namespace OpenBr.LaborTaxes.Contract.Model
 {
 
     /// <summary>

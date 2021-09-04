@@ -5,8 +5,8 @@ using DnsClient.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenBr.LaborTaxes.Business.Model;
 using OpenBr.LaborTaxes.Business.Services;
+using OpenBr.LaborTaxes.Contract.Model;
 using OpenBr.LaborTaxes.Web.Api.Models;
 
 namespace OpenBr.LaborTaxes.Web.Api.Controllers

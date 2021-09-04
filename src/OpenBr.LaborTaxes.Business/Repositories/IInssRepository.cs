@@ -1,5 +1,5 @@
 ﻿using OpenBr.LaborTaxes.Business.Documents;
-using OpenBr.LaborTaxes.Business.Enums;
+using OpenBr.LaborTaxes.Contract.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

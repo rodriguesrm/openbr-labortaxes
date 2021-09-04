@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using OpenBr.LaborTaxes.Business.Documents;
-using OpenBr.LaborTaxes.Business.Enums;
-using OpenBr.LaborTaxes.Business.Model;
+﻿using OpenBr.LaborTaxes.Business.Documents;
 using OpenBr.LaborTaxes.Business.Repositories;
+using OpenBr.LaborTaxes.Contract.Enums;
+using OpenBr.LaborTaxes.Contract.Model;
 using System;
 using System.Linq;
 using System.Threading;
@@ -115,10 +114,14 @@ namespace OpenBr.LaborTaxes.Business.Services
         ///<inheritdoc/>
         public async Task<CalculateNetRevenueResult> CalculateNetRevenue(InssType type, decimal revenue, byte dependentsNumber, DateTime? date, CancellationToken cancellationToken = default)
         {
-            CalculateNetRevenueResult result = new CalculateNetRevenueResult()
+            CalculateNetRevenueResult result = new()
             {
                 Inss = await CalculateInss(type, revenue, date, cancellationToken)
             };
+
+            if (result.Inss == null)
+                return null;
+
             result.Irpf = await CalculateIrpf(revenue, result.Inss.Amount, dependentsNumber, date, cancellationToken);
             result.NetRevenue = revenue - (result.Inss?.Amount ?? 0M) - (result.Irpf?.Amount ?? 0M);
             return result;
