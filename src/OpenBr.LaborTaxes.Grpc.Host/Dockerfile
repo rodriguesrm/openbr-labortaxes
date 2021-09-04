@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["OpenBr.LaborTaxes.Grpc.Host/OpenBr.LaborTaxes.Grpc.Host.csproj", "OpenBr.LaborTaxes.Grpc.Host/"]
 COPY ["OpenBr.LaborTaxes.Business/OpenBr.LaborTaxes.Business.csproj", "OpenBr.LaborTaxes.Business/"]
 COPY ["OpenBr.LaborTaxes.Contract/OpenBr.LaborTaxes.Contract.csproj", "OpenBr.LaborTaxes.Contract/"]
+COPY [".nuget/nuget.config", ""]
 RUN dotnet restore "OpenBr.LaborTaxes.Grpc.Host/OpenBr.LaborTaxes.Grpc.Host.csproj"
 COPY . .
 WORKDIR "/src/OpenBr.LaborTaxes.Grpc.Host"
