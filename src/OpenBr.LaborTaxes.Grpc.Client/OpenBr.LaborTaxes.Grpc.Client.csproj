@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\..\rsoft-logs\src\RSoft.Logs\license.txt">
+		<None Include="..\..\docs\license.txt">
 		  <Pack>True</Pack>
 		  <PackagePath></PackagePath>
 		</None>
