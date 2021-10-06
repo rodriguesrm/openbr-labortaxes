@@ -13,6 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0-Compose", "0-Compose", "{
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1-Docs", "1-Docs", "{D0726A3D-C158-4AC2-BDAA-737046E4906E}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_Core", "3_Core", "{992F5656-A98B-4D55-BD79-D5684E107692}"
 EndProject
