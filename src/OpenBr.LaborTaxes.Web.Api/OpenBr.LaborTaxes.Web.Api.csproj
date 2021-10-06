@@ -4,9 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>51a1b744-e67d-413d-923f-041bb788a97c</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.1</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,8 +29,8 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="5.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="RSoft.Logs" Version="1.1.0-rc1.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+    <PackageReference Include="RSoft.Logs" Version="1.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
   </ItemGroup>
